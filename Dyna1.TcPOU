@@ -1,0 +1,874 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="Dyna1" Id="{7752b508-c852-473a-8c64-69188f9c61d5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Dyna1
+VAR_INPUT
+	a: ARRAY[0..2] OF LREAL;
+	q: ARRAY[0..2] OF LREAL;
+	dq: ARRAY[0..2] OF LREAL;
+	d2q: ARRAY[0..2] OF LREAL;
+	Wn: ARRAY[0..2] OF LREAL;
+	Z2: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR_OUTPUT
+	tau_drive: ARRAY[0..3] OF LREAL;
+	//f21_single: LREAL;
+	adaptive_rate: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR
+	f21_single: LREAL;
+	Lc11: LREAL;
+	Lc13: LREAL;
+	Lc15: LREAL;
+	b_n: LREAL;
+	n1: LREAL;
+	cph1: LREAL;
+	Mm: ARRAY[0..8] OF LREAL;
+	tau: ARRAY[0..2] OF LREAL;
+	f1: LREAL;
+	g3: LREAL;
+	b_D: ARRAY[0..11] OF LREAL;
+	b: ARRAY[0..8] OF LREAL;
+	a_0: LREAL;
+	b_a: LREAL;
+	e_a: LREAL;
+	f_a: LREAL;
+	g_a: LREAL;
+	h_a: LREAL;
+	i_a: LREAL;
+	j_a: LREAL;
+	k_a: LREAL;
+	l_a: LREAL;
+	m_a: LREAL;
+	n_a: LREAL;
+	o_a: LREAL;
+	p_a: LREAL;
+	cb_a: LREAL;
+	jb_a: LREAL;
+	kb_a: LREAL;
+	mb_a: LREAL;
+	nb_a: LREAL;
+	ob_a: LREAL;
+	pb_a: LREAL;
+	tb_a: LREAL;
+	ub_a: LREAL;
+	vb_a: LREAL;
+	wb_a: LREAL;
+	xb_a: LREAL;
+	yb_a: LREAL;
+	ac_a: LREAL;
+	bc_a: LREAL;
+	cc_a: LREAL;
+	dc_a: LREAL;
+	ec_a: LREAL;
+	fc_a: LREAL;
+	gc_a: LREAL;
+	ic_a: LREAL;
+	kc_a: LREAL;
+	mc_a: LREAL;
+	rc_a: LREAL;
+	cd_a: LREAL;
+	ed_a: LREAL;
+	id_a: LREAL;
+	kd_a: LREAL;
+	ld_a: LREAL;
+	md_a: LREAL;
+	od_a: LREAL;
+	qd_a: LREAL;
+	sd_a: LREAL;
+	wd_a: LREAL;
+	be_a: LREAL;
+	ee_a: LREAL;
+	ph_a: LREAL;
+	qh_a: LREAL;
+	sh_a: LREAL;
+	th_a: LREAL;
+	di_a: LREAL;
+	gi_a: LREAL;
+	hi_a: LREAL;
+	ii_a: LREAL;
+	ji_a: LREAL;
+	ki_a: LREAL;
+	mi_a: LREAL;
+	oi_a: LREAL;
+	qi_a: LREAL;
+	ti_a: LREAL;
+	xi_a: LREAL;
+	aj_a: LREAL;
+	dj_a: LREAL;
+	gj_a: LREAL;
+	jj_a: LREAL;
+	kj_a: LREAL;
+	lj_a: LREAL;
+	nj_a: LREAL;
+	ck_a: LREAL;
+	gk_a: LREAL;
+	jk_a: LREAL;
+	nk_a: LREAL;
+	pk_a: LREAL;
+	vk_a: LREAL;
+	wk_a: LREAL;
+	bl_a: LREAL;
+	el_a: LREAL;
+	gl_a: LREAL;
+	jl_a: LREAL;
+	ll_a: LREAL;
+	ol_a: LREAL;
+	ql_a: LREAL;
+	ul_a: LREAL;
+	wl_a: LREAL;
+	xl_A: ARRAY[0..8] OF LREAL;
+	b_r1: DINT;
+	b_r2: DINT;
+	r3: DINT;
+	maxval: LREAL;
+	a21: LREAL;
+	rtemp: DINT;
+	Mm_tmp: LREAL;
+	tau_tmp: LREAL;
+	tau_tmp_0: LREAL;
+	xl_A_tmp: ARRAY[0..11] OF LREAL;
+	dq_0: ARRAY[0..2] OF LREAL;
+	tmp: ARRAY[0..2] OF LREAL;
+	e: ARRAY[0..8] OF LREAL;
+	Mm_0: ARRAY[0..8] OF LREAL;
+	i_a_tmp: LREAL;
+	r_a_tmp: LREAL;
+	u_a_tmp: LREAL;
+	ob_a_tmp: LREAL;
+	ic_a_tmp: LREAL;
+	ic_a_tmp_tmp: LREAL;
+	mc_a_tmp: LREAL;
+	mc_a_tmp_tmp: LREAL;
+	Mm_tmp_0: LREAL;
+	Mm_tmp_1: LREAL;
+	Mm_tmp_2: LREAL;
+	Mm_tmp_3: LREAL;
+	Mm_tmp_4: LREAL;
+	Mm_tmp_5: LREAL;
+	Mm_tmp_6: LREAL;
+	Mm_tmp_7: LREAL;
+	Mm_tmp_8: LREAL;
+	mc_a_tmp_tmp_0: LREAL;
+	Mm_tmp_9: LREAL;
+	Mm_tmp_a: LREAL;
+	Mm_tmp_tmp: LREAL;
+	id_a_tmp: LREAL;
+	ud_a_tmp: LREAL;
+	Mm_tmp_tmp_0: LREAL;
+	ri_a_tmp: LREAL;
+	Mm_tmp_b: LREAL;
+	Mm_tmp_c: LREAL;
+	Mm_tmp_d: LREAL;
+	Mm_tmp_e: LREAL;
+	Mm_tmp_tmp_1: LREAL;
+	dq_tmp: LREAL;
+	dq_tmp_0: LREAL;
+	Mm_tmp_f: LREAL;
+	kj_a_tmp: LREAL;
+	dq_tmp_1: LREAL;
+	D_tmp: DINT;
+	D_tmp_0: DINT;
+	ob_a_tmp_0: LREAL;
+	ic_a_tmp_0: LREAL;
+	kc_a_tmp: LREAL;
+	p_a_tmp_tmp: LREAL;
+	yd_a_tmp_tmp: LREAL;
+	mb_a_tmp: LREAL;
+	Mm_tmp_tmp_2: LREAL;
+	hd_a_tmp: LREAL;
+	f_a_tmp: LREAL;
+	e_a_tmp_tmp: LREAL;
+	Mm_tmp_tmp_3: LREAL;
+	k_a_tmp_tmp: LREAL;
+	Mm_tmp_tmp_4: LREAL;
+	Mm_tmp_tmp_5: LREAL;
+	Mm_tmp_tmp_6: LREAL;
+	Mm_tmp_tmp_7: LREAL;
+	Mm_tmp_tmp_8: LREAL;
+	Mm_tmp_tmp_9: LREAL;
+	Mm_tmp_tmp_a: LREAL;
+	e_a_tmp_tmp_0: LREAL;
+	dq_tmp_tmp: LREAL;
+	cph1_tmp_tmp: LREAL;
+	dq_tmp_tmp_0: LREAL;
+	e_a_tmp_tmp_1: LREAL;
+	o_a_tmp: LREAL;
+	Mm_tmp_tmp_b: LREAL;
+	g_a_tmp_tmp: LREAL;
+	nb_a_tmp_tmp: LREAL;
+	mb_a_tmp_tmp: LREAL;
+	dq_tmp_tmp_1: LREAL;
+	dq_tmp_tmp_2: LREAL;
+	dq_tmp_tmp_3: LREAL;
+	dq_tmp_tmp_4: LREAL;
+	Mm_tmp_g: LREAL;
+	dq_tmp_tmp_5: LREAL;
+	dq_tmp_tmp_6: LREAL;
+	dq_tmp_tmp_7: LREAL;
+	dq_tmp_tmp_8: LREAL;
+	ic_a_tmp_1: LREAL;
+	ic_a_tmp_tmp_0: LREAL;
+	ic_a_tmp_tmp_tmp: LREAL;
+	kc_a_tmp_0: LREAL;
+	Mm_tmp_h: LREAL;
+	temp1: LREAL;
+	temp2: LREAL;
+	temp3: LREAL;
+	temp4: LREAL;
+	i0_inv: inv;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+(* %杆长与偏置 *)
+(* %质量与惯量 *)
+(* MATLAB Function 'MATLAB Function1': '<S1>:1' *)
+(* '<S1>:1:7' g=9806.65; *)
+(* '<S1>:1:7' theta6=5*pi/6; *)
+(* '<S1>:1:7' theta7=-pi/6; *)
+(* coder.extrinsic('evalin'); *)
+(* L1=0;L3=0;S1=0;R1=0;R2=0;Le=0;K1=0;K2=0;M1=0;M2=0;, *)
+(* L1=evalin('base','L1');L3=evalin('base','L3');S1=evalin('base','S1');R1=evalin('base','R1');Le=evalin('base','Le');R2=evalin('base','R2'); *)
+(* K1=evalin('base','K1');K2=evalin('base','K2');M1=evalin('base','M1');M2=evalin('base','M2'); *)
+(* S1=82;L1=600;L3=550;M1=312.5;M2=140.5;R2=318; *)
+(* R1=200;Le=414;K1=270;L2=215;L11=532;S3=150;S4=180; *)
+(* Lc14=100.63;Lc14y=49.13; *)
+(* LC1y=7.69;LC2=-38.71;LC2y=-48.68;LC3=167.99; *)
+(* L9=sqrt(4.13^2+2.45^2);Lcx10=-13.9; *)
+(* Ls5=268.5;Ls6=-242.5;Ls11=189; Ls13=189; %偏置 *)
+
+(* m1=31.235;m2=17.983;m3=21.85;m4=5.16;m5=2.248;m6=2.248;m7=1.73;m8=1.73; *)
+(* m9=121.413;m10=13.425;m11=3.54;m12=1.729;m13=2.99;m14=5.342;m15=2.79; *)
+(* I1=[531432.895,1962865.034,1545286.115]; *)
+(* I2=[118284.16,456199.27,500258.95]; *)
+(* I3=[79013.25, 1135425.11, 1121439.73]; *)
+(* I4=[870.60,179377.20,179369.49]; *)
+(* I5=[3169.766,5265.289,3886.288];%滑块1 *)
+(* I6=[3169.766,5265.289,3886.288];%滑块2 *)
+(* I7=[143.00,29009.62,29008.38]; *)
+(* I8=[143.00,29009.62,29008.38];%AC,BC *)
+(* I9=[5187204.097,6638143.629, 4645540.195]; *)
+(* I10=[230616.784, 122346.017, 246696.850]; *)
+(* I11=[10700.52,125437.80,115850.13]; *)
+(* I12=[12209.748,498.623,12408.157]; *)
+(* I13=[397.49,124363.03,124495.89]; *)
+(* I14=[18845.358,28753.446,45020.107]; *)
+(* I15=[376.19,99421.54,99541.62]; *)
+(* '<S1>:1:37' K2=K1; *)
+(* '<S1>:1:37' L7=Le; *)
+(* '<S1>:1:37' L8=L7; *)
+(* '<S1>:1:37' Lc11=45+0.5*L11; *)
+Lc11 := (0.5 * L11) + 45.0;
+(* '<S1>:1:37' Lc13=0.5*L1; *)
+Lc13 := 0.5 * L1;
+(* '<S1>:1:37' Lc15=0.5*L3; *)
+Lc15 := 0.5 * L3;
+(* '<S1>:1:38' m1=m(1); *)
+(* '<S1>:1:38' m2=m(2); *)
+(* '<S1>:1:38' m3=m(3); *)
+(* '<S1>:1:38' m4=m(4); *)
+(* '<S1>:1:38' m5=m(5); *)
+(* '<S1>:1:38' m6=m(6); *)
+(* '<S1>:1:38' m7=m(7); *)
+(* '<S1>:1:38' m8=m(8); *)
+(* '<S1>:1:38' m9=m(9); *)
+(* '<S1>:1:38' m10=m(10); *)
+(* '<S1>:1:38' m11=m(11); *)
+(* '<S1>:1:38' m12=m(12); *)
+(* '<S1>:1:38' m13=m(13); *)
+(* '<S1>:1:38' m14=m(14); *)
+(* '<S1>:1:38' m15=m(15); *)
+(* '<S1>:1:40' mload=0; *)
+(* '<S1>:1:42' Ixx1=I1(1); *)
+(* '<S1>:1:42' Iyy1=I1(2); *)
+(* '<S1>:1:42' Izz1=I1(3); *)
+(* '<S1>:1:43' Ixx2=I2(1); *)
+(* '<S1>:1:43' Iyy2=I2(2); *)
+(* '<S1>:1:43' Izz2=I2(3); *)
+(* '<S1>:1:44' Ixx3=I3(1); *)
+(* '<S1>:1:44' Iyy3=I3(2); *)
+(* '<S1>:1:44' Izz3=I3(3); *)
+(* '<S1>:1:45' Ixx4=I4(1); *)
+(* '<S1>:1:45' Iyy4=I4(2); *)
+(* '<S1>:1:45' Izz4=I4(3); *)
+(* '<S1>:1:46' Ixx5=I5(1); *)
+(* '<S1>:1:46' Iyy5=I5(2); *)
+(* '<S1>:1:46' Izz5=I5(3); *)
+(* '<S1>:1:47' Ixx6=I6(1); *)
+(* '<S1>:1:47' Iyy6=I6(2); *)
+(* '<S1>:1:47' Izz6=I6(3); *)
+(* '<S1>:1:48' Ixx7=I7(1); *)
+(* '<S1>:1:48' Iyy7=I7(2); *)
+(* '<S1>:1:48' Izz7=I7(3); *)
+(* '<S1>:1:49' Ixx8=I8(1); *)
+(* '<S1>:1:49' Iyy8=I8(2); *)
+(* '<S1>:1:49' Izz8=I8(3); *)
+(* '<S1>:1:50' Ixx9=I9(1); *)
+(* '<S1>:1:50' Iyy9=I9(2); *)
+(* '<S1>:1:50' Izz9=I9(3); *)
+(* '<S1>:1:51' Ixx10=I10(1); *)
+(* '<S1>:1:51' Iyy10=I10(2); *)
+(* '<S1>:1:51' Izz10=I10(3); *)
+(* '<S1>:1:52' Ixx11=I11(1); *)
+(* '<S1>:1:52' Iyy11=I11(2); *)
+(* '<S1>:1:52' Izz11=I11(3); *)
+(* '<S1>:1:53' Ixx12=I12(1); *)
+(* '<S1>:1:53' Iyy12=I12(2); *)
+(* '<S1>:1:53' Izz12=I12(3); *)
+(* '<S1>:1:54' Ixx13=I13(1); *)
+(* '<S1>:1:54' Iyy13=I13(2); *)
+(* '<S1>:1:54' Izz13=I13(3); *)
+(* '<S1>:1:55' Ixx14=I14(1); *)
+(* '<S1>:1:55' Iyy14=I14(2); *)
+(* '<S1>:1:55' Izz14=I14(3); *)
+(* '<S1>:1:56' Ixx15=I15(1); *)
+(* '<S1>:1:56' Iyy15=I15(2); *)
+(* '<S1>:1:56' Izz15=I15(3); *)
+(* '<S1>:1:60' theta1=q(1); *)
+(* '<S1>:1:60' theta4=q(2); *)
+(* '<S1>:1:60' theta5=q(3); *)
+(* '<S1>:1:61' theta2=theta6-theta4; *)
+(* '<S1>:1:61' theta3=theta7-theta5; *)
+(* '<S1>:1:62' dq1=dq(1); *)
+(* '<S1>:1:62' dq2=dq(2); *)
+(* '<S1>:1:62' dq3=dq(3); *)
+(* '<S1>:1:64' n=sqrt((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2); *)
+maxval := COS(-0.52359877559829882 - q[2]);
+a_0 := M1 - (R2 * maxval);
+a21 := SIN(-0.52359877559829882 - q[2]);
+b_a := M2 - (R2 * a21);
+b_n := SQRT((a_0 * a_0) + (b_a * b_a));
+(* '<S1>:1:64' n1=1/n; *)
+n1 := 1.0 / b_n;
+(* '<S1>:1:65' phi1=asin((K1-R1*sin(theta2))/L7); *)
+(* '<S1>:1:65' cph1=(L7^2-(K1-R1*sin(theta2))^2)^0.5/L7; *)
+a_0 := SIN(2.6179938779914944 - q[1]);
+b_a := K1 - (R1 * a_0);
+cph1_tmp_tmp := b_Le * b_Le;
+cph1 := SQRT(cph1_tmp_tmp - (b_a * b_a)) / b_Le;
+(* '<S1>:1:66' phi2=acos((K2-R1*cos(theta2))/L8); *)
+(* '<S1>:1:67' jij9=[ Izz9, 0, 0;0,0,0;0,0,0]; *)
+(* '<S1>:1:67' Ekr9=0.5*dq.'*jij9*dq; *)
+(* '<S1>:1:68' jmj9=[ L9^2*m9, 0, 0; 0, 0, 0;0, 0, 0]; *)
+(* '<S1>:1:68' Ekt9=0.5*dq.'*jmj9*dq; *)
+(* '<S1>:1:70' Mm=[Ixx5 + Iyy14/2 + Izz6 + Izz9 + Izz10 + (m13*(4*Lc13^2*cos(theta4)^2 - 8*Lc13*S1*cos(theta4) - 4*sqrt((3))*Lc13*S3*cos(theta4) + 4*Ls13^2 + 4*S1^2 + 4*sqrt((3))*S1*S3 + 3*S3^2))/4 + m15*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1))^2 + m15*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1))^2 + m6*(K2^2 - 2*K2*S1 + Ls6^2 + S1^2) + m11*(sin(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) + Ls11*cos(theta1))^2 + m11*(cos(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) - Ls11*sin(theta1))^2 + (m4*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5))^2)/4 + m3*(L1*cos(theta4) - S1 + LC3*cos(theta5))^2 + m1*(LC1*cos(theta4) - S1 + LC1y*sin(theta4))^2 + (m14*(cos(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) - 2*Ls13*sin(theta1))^2)/4 + (m14*(sin(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) + 2*Ls13*cos(theta1))^2)/4 + (m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5))^2 + m5*(sin(theta1)*(S1 + sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) - R1*cos(theta4 - theta6)) + Ls5*cos(theta1))^2 + m5*(cos(theta1)*(S1 + sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) - R1*cos(theta4 - theta6)) - Ls5*sin(theta1))^2 + (m7*(L7^2*cph1^2 - 4*L7*R1*cph1*cos(theta4 - theta6) + 4*L7*S1*cph1 + 4*Ls5^2 + 4*R1^2*cos(theta4 - theta6)^2 - 8*R1*S1*cos(theta4 - theta6) + 4*S1^2))/4 + L9^2*m9 + (m8*(K2^2 + 2*K2*R1*cos(theta4 - theta6) - 4*K2*S1 + 4*Ls6^2 + R1^2*cos(theta4 - theta6)^2 - 4*R1*S1*cos(theta4 - theta6) + 4*S1^2))/4 + Ixx14/2 - Ixx8*((K2 - R1*cos(theta4 - theta6))^2/L8^2 - 1) + Iyy1*cos(theta4)^2 + Iyy2*cos(theta5)^2 + Iyy3*cos(theta5)^2 + Iyy4*cos(theta4)^2 + Iyy13*cos(theta4)^2 + Iyy15*cos(theta5)^2 - Iyy7*((K1 + R1*sin(theta4 - theta6))^2/L7^2 - 1) + Ixx1*sin(theta4)^2 + Ixx2*sin(theta5)^2 + Ixx3*sin(theta5)^2 + Ixx4*sin(theta4)^2 + Ixx13*sin(theta4)^2 + Ixx15*sin(theta5)^2 + m2*(S1 + LC2*cos(theta5) - LC2y*sin(theta5))^2 + (Iyy8*(K2 - R1*cos(theta4 - theta6))^2)/L8^2 + m12*cos(theta1)^2*(M1 - S1 + sqrt((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))^2 + (Ixx7*(K1 + R1*sin(theta4 - theta6))^2)/L7^2 + m12*sin(theta1)^2*(M1 - S1 + sqrt((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))^2 + Iyy11*n1^2*(M1 - R2*cos(theta5 - theta7))^2 + Ixx11*n1^2*(M2 + R2*sin(theta5 - theta7))^2 + (Ixx12*(M1 - R2*cos(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (Izz12*(M2 + R2*sin(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2), - L1*Ls13*m14*sin(theta4) - L1*Ls13*m15*sin(theta4) - Lc13*Ls13*m13*sin(theta4) - (Ls6*R1*m8*sin(theta4 - theta6))/2 + (Ls5*R1*m5*((R1*sin(2*theta4 - 2*theta6))/2 - sin(theta4 - theta6)*sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + K1*cos(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + (Ls5*R1*m7*(K1*cos(theta4 - theta6) - 2*L7*cph1*sin(theta4 - theta6) + R1*cos(theta4 - theta6)*sin(theta4 - theta6)))/(2*L7*cph1), - Lc15*Ls13*m15*sin(theta5) - Lc11*Ls11*R2*m11*(M2 + R2*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))*n1^3; *)
+(* '<S1>:1:71'     - L1*Ls13*m14*sin(theta4) - L1*Ls13*m15*sin(theta4) - Lc13*Ls13*m13*sin(theta4) - (Ls6*R1*m8*sin(theta4 - theta6))/2 + (Ls5*R1*m5*((R1*sin(2*theta4 - 2*theta6))/2 - sin(theta4 - theta6)*sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + K1*cos(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + (Ls5*R1*m7*(K1*cos(theta4 - theta6) - 2*L7*cph1*sin(theta4 - theta6) + R1*cos(theta4 - theta6)*sin(theta4 - theta6)))/(2*L7*cph1), Izz1 + Izz4 + Izz13 + m6*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/sqrt(L7^2 - (K2 - R1*cos(theta4 - theta6))^2))^2 + L1^2*(m10 + mload) + L1^2*m3 + (L1^2*m4)/4 + L1^2*m14 + L1^2*m15 + Lc13^2*m13 + m1*(LC1^2 + LC1y^2) + m8*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/(L8*sqrt(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2)*2))^2 + m7*cos(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1))^2 + m7*sin(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1))^2 + m5*cos(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2))^2 + m5*sin(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2))^2 + (R1^2*m7*cos(theta4 - theta6)^2)/4 + (R1^2*m8*sin(theta4 - theta6)^2*cos(theta1)^2)/4 + (R1^2*m8*sin(theta4 - theta6)^2*sin(theta1)^2)/4 - (Izz7*R1^2*cos(theta4 - theta6)^2)/(L7^2*((K1 + R1*sin(theta4 - theta6))^2/L7^2 - 1)) - (Izz8*R1^2*sin(theta4 - theta6)^2)/(L8^2*((K2 - R1*cos(theta4 - theta6))^2/L8^2 - 1)), L1*L3*cos(theta4 - theta5)*(m10 + mload) - (L1*L2*m4*cos(theta4 - theta5))/2 + L1*LC3*m3*cos(theta4 - theta5) + L1*Lc15*m15*cos(theta4 - theta5); *)
+(* '<S1>:1:72'     - Lc15*Ls13*m15*sin(theta5) - Lc11*Ls11*R2*m11*(M2 + R2*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))*n1^3, L1*L3*cos(theta4 - theta5)*(m10 + mload) - (L1*L2*m4*cos(theta4 - theta5))/2 + L1*LC3*m3*cos(theta4 - theta5) + L1*Lc15*m15*cos(theta4 - theta5), Izz2 + Izz3 + Izz15 + L3^2*(m10 + mload) + L2^2*m4 + LC3^2*m3 + Lc15^2*m15 + m2*(LC2^2 + LC2y^2) - (Iyy12*((R2*sin(theta5 - theta7))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) - ((M1 - R2*cos(theta5 - theta7))*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/(2*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)))^2)/((M1 - R2*cos(theta5 - theta7))^2/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) - 1) + R2^2*m12*cos(theta5 - theta7)^2 + Izz11*R2^2*n1^4*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2 + (R2^2*m12*cos(theta1)^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (R2^2*m12*sin(theta1)^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + Lc11^2*R2^2*m11*n1^6*(M1 - R2*cos(theta5 - theta7))^2*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2 + Lc11^2*R2^2*m11*n1^6*cos(theta1)^2*(M2 + R2*sin(theta5 - theta7))^2*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2 + Lc11^2*R2^2*m11*n1^6*sin(theta1)^2*(M2 + R2*sin(theta5 - theta7))^2*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2]; *)
+b_a := COS(q[1]);
+e_a_tmp_tmp := COS(q[0]);
+e_a_tmp_tmp_0 := SIN(q[0]);
+e_a_tmp_tmp_1 := COS(q[2]);
+e_a := ((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * b_a)) - (Lc15 * e_a_tmp_tmp_1)) * e_a_tmp_tmp_0) + (Ls13 * e_a_tmp_tmp);
+f_a := ((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * COS(q[1]))) - (Lc15 * COS(q[2]))) * e_a_tmp_tmp) - (Ls13 * e_a_tmp_tmp_0);
+g_a_tmp_tmp := COS(q[2] - -0.52359877559829882);
+g_a := ((((M1 - (R2 * g_a_tmp_tmp)) * (Lc11 * n1)) + (S1 - M1)) * e_a_tmp_tmp_0) + (Ls11 * e_a_tmp_tmp);
+h_a := ((((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * (Lc11 * n1)) + (S1 - M1)) * e_a_tmp_tmp) - (Ls11 * e_a_tmp_tmp_0);
+i_a_tmp := L1 * COS(q[1]);
+i_a := ((2.0 * S1) - i_a_tmp) + ((2.0 * L2) * e_a_tmp_tmp_1);
+j_a := (i_a_tmp - S1) + (LC3 * e_a_tmp_tmp_1);
+k_a_tmp_tmp := SIN(q[1]);
+k_a := ((LC1 * b_a) - S1) + (LC1y * k_a_tmp_tmp);
+l_a := ((((((2.0 * S1) + Lc14y) - (1.7320508075688772 * Lc14)) + (1.7320508075688772 * S3)) - ((2.0 * L1) * b_a)) * e_a_tmp_tmp) - ((2.0 * Ls13) * e_a_tmp_tmp_0);
+m_a := ((((((2.0 * S1) + Lc14y) - (1.7320508075688772 * Lc14)) + (1.7320508075688772 * S3)) - ((2.0 * L1) * COS(q[1]))) * e_a_tmp_tmp_0) + ((2.0 * Ls13) * e_a_tmp_tmp);
+n_a := ((Lcx10 - S1) + i_a_tmp) + (L3 * e_a_tmp_tmp_1);
+i_a_tmp := SIN(q[1] - 2.6179938779914944);
+o_a := (R1 * i_a_tmp) + K1;
+p_a_tmp_tmp := COS(q[1] - 2.6179938779914944);
+p_a := (((SQRT(cph1_tmp_tmp - (o_a * o_a)) + S1) - (R1 * p_a_tmp_tmp)) * e_a_tmp_tmp_0) + (Ls5 * e_a_tmp_tmp);
+o_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+r_a_tmp := COS(q[1] - 2.6179938779914944) * R1;
+o_a := (((SQRT(cph1_tmp_tmp - (o_a * o_a)) + S1) - r_a_tmp) * e_a_tmp_tmp) - (Ls5 * e_a_tmp_tmp_0);
+u_a_tmp := K1 - r_a_tmp;
+cb_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+o_a_tmp := SIN(q[2]);
+jb_a := ((LC2 * e_a_tmp_tmp_1) + S1) - (LC2y * o_a_tmp);
+mb_a_tmp_tmp := M1 - (COS(q[2] - -0.52359877559829882) * R2);
+nb_a_tmp_tmp := SIN(q[2] - -0.52359877559829882);
+nb_a := (R2 * nb_a_tmp_tmp) + M2;
+ob_a_tmp := M1 - S1;
+ob_a_tmp_0 := mb_a_tmp_tmp * mb_a_tmp_tmp;
+ob_a := SQRT(ob_a_tmp_0 + (nb_a * nb_a)) + ob_a_tmp;
+pb_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+nb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+tb_a := SQRT(ob_a_tmp_0 + (nb_a * nb_a)) + ob_a_tmp;
+vb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+yb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ac_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+cc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+dc_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ec_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+fc_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+gc_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ic_a_tmp_tmp := SIN(q[1] - 2.6179938779914944) * R1;
+ic_a_tmp := u_a_tmp * ic_a_tmp_tmp;
+ic_a_tmp_0 := u_a_tmp * u_a_tmp;
+ic_a_tmp_tmp_tmp := cph1_tmp_tmp - ic_a_tmp_0;
+ic_a_tmp_tmp_0 := SQRT(ic_a_tmp_tmp_tmp);
+ic_a_tmp_1 := r_a_tmp - (ic_a_tmp / ic_a_tmp_tmp_0);
+kc_a_tmp := ic_a_tmp_0 / cph1_tmp_tmp;
+kc_a_tmp_0 := SQRT(1.0 - kc_a_tmp);
+kc_a := r_a_tmp - (ic_a_tmp / ((kc_a_tmp_0 * b_Le) * 2.0));
+mc_a_tmp_tmp := ((SIN(q[1] - 2.6179938779914944) * R1) + K1) * r_a_tmp;
+mc_a_tmp_tmp_0 := (2.0 * b_Le) * cph1;
+mc_a_tmp := ic_a_tmp_tmp - (mc_a_tmp_tmp / mc_a_tmp_tmp_0);
+mb_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+rc_a := ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (mb_a * mb_a)));
+mb_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+mb_a := ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (mb_a * mb_a)));
+cd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+nb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+id_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+id_a_tmp := SIN(q[2] - -0.52359877559829882) * R2;
+id_a := (id_a_tmp / SQRT(ob_a_tmp_0 + (nb_a * nb_a))) - ((((((SIN(q[2] - -0.52359877559829882) * R2) + M2) * ((2.0 * R2) * g_a_tmp_tmp)) + (mb_a_tmp_tmp * ((2.0 * R2) * nb_a_tmp_tmp))) * mb_a_tmp_tmp) / (EXPT(ob_a_tmp_0 + (id_a * id_a), 1.5) * 2.0));
+md_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+od_a := (R2 - (M1 * g_a_tmp_tmp)) + (M2 * nb_a_tmp_tmp);
+qd_a := (M2 * g_a_tmp_tmp) + (M1 * nb_a_tmp_tmp);
+sd_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ud_a_tmp := (COS(q[2] - -0.52359877559829882) * M2) + (SIN(q[2] - -0.52359877559829882) * M1);
+wd_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+yd_a_tmp_tmp := (R2 - (COS(q[2] - -0.52359877559829882) * M1)) + (SIN(q[2] - -0.52359877559829882) * M2);
+be_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ee_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+Mm_tmp_tmp_0 := q[1] - q[2];
+Mm_tmp := COS(Mm_tmp_tmp_0);
+mb_a_tmp := EXPT(n1, 3.0);
+nb_a := EXPT(n1, 4.0);
+hd_a_tmp := EXPT(n1, 6.0);
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+Mm_tmp_0 := S1 * S1;
+Mm_tmp_1 := Mm_tmp_0 * 4.0;
+Mm_tmp_2 := K1 * K1;
+Mm_tmp_3 := Ls6 * Ls6;
+Mm_tmp_tmp_8 := R1 * R1;
+Mm_tmp_4 := p_a_tmp_tmp * p_a_tmp_tmp;
+Mm_tmp_5 := b_a * b_a;
+Mm_tmp_6 := e_a_tmp_tmp_1 * e_a_tmp_tmp_1;
+Mm_tmp_7 := o_a_tmp * o_a_tmp;
+Mm_tmp_8 := k_a_tmp_tmp * k_a_tmp_tmp;
+Mm_tmp_tmp_b := n1 * n1;
+Mm_tmp_tmp_4 := Lc13 * Lc13;
+Mm_tmp_9 := e_a_tmp_tmp * e_a_tmp_tmp;
+Mm_tmp_a := e_a_tmp_tmp_0 * e_a_tmp_tmp_0;
+Mm_tmp_tmp_3 := (8.0 * Lc13) * S1;
+Mm_tmp_tmp_5 := (6.9282032302755088 * Lc13) * S3;
+Mm_tmp_tmp_6 := (2.0 * K1) * R1;
+Mm_tmp_tmp_7 := (4.0 * R1) * S1;
+Mm_tmp_tmp_9 := (8.0 * R1) * S1;
+Mm_tmp_tmp_a := ((4.0 * b_Le) * R1) * cph1;
+Mm_tmp_b := Mm_tmp_9 * m[11];
+Mm_tmp_c := Mm_tmp_a * m[11];
+Mm_tmp_f := Mm_tmp_tmp_8 * Mm_tmp_4;
+Mm_tmp_g := ob_a_tmp_0 * I12[0];
+Mm[0] := ((((((((((((((((((((((((((((((((((((((((((((((((((Mm_tmp_tmp_4 * 4.0) * Mm_tmp_5) - (Mm_tmp_tmp_3 * b_a)) - (Mm_tmp_tmp_5 * b_a)) + ((Ls13 * Ls13) * 4.0)) + Mm_tmp_1) + ((6.9282032302755088 * S1) * S3)) + ((S3 * S3) * 3.0)) * m[12]) / 4.0) + (((((I14[1] / 2.0) + I5[0]) + I6[2]) + I9[2]) + I10[2])) + ((e_a * e_a) * m[14])) + ((f_a * f_a) * m[14])) + ((((Mm_tmp_2 - ((2.0 * K1) * S1)) + Mm_tmp_3) + Mm_tmp_0) * m[5])) + ((g_a * g_a) * m[10])) + ((h_a * h_a) * m[10])) + (((i_a * i_a) * m[3]) / 4.0)) + ((j_a * j_a) * m[2])) + ((k_a * k_a) * m[0])) + (((l_a * l_a) * m[13]) / 4.0)) + (((m_a * m_a) * m[13]) / 4.0)) + ((n_a * n_a) * m[9])) + ((p_a * p_a) * m[4])) + ((o_a * o_a) * m[4])) + (((((((((cph1_tmp_tmp * (cph1 * cph1)) - (Mm_tmp_tmp_a * p_a_tmp_tmp)) + (((4.0 * b_Le) * S1) * cph1)) + ((Ls5 * Ls5) * 4.0)) + ((Mm_tmp_tmp_8 * 4.0) * Mm_tmp_4)) - (Mm_tmp_tmp_9 * p_a_tmp_tmp)) + Mm_tmp_1) * m[6]) / 4.0)) + ((L9 * L9) * m[8])) + (((((((((Mm_tmp_tmp_6 * p_a_tmp_tmp) + Mm_tmp_2) - ((4.0 * K1) * S1)) + (Mm_tmp_3 * 4.0)) + Mm_tmp_f) - (Mm_tmp_tmp_7 * p_a_tmp_tmp)) + Mm_tmp_1) * m[7]) / 4.0)) + (I14[0] / 2.0)) - ((kc_a_tmp - 1.0) * I8[0])) + (Mm_tmp_5 * I1[1])) + (Mm_tmp_6 * I2[1])) + (Mm_tmp_6 * I3[1])) + (Mm_tmp_5 * I4[1])) + (Mm_tmp_5 * I13[1])) + (Mm_tmp_6 * I15[1])) - ((((cb_a * cb_a) / cph1_tmp_tmp) - 1.0) * I7[1])) + (Mm_tmp_8 * I1[0])) + (Mm_tmp_7 * I2[0])) + (Mm_tmp_7 * I3[0])) + (Mm_tmp_8 * I4[0])) + (Mm_tmp_8 * I13[0])) + (Mm_tmp_7 * I15[0])) + ((jb_a * jb_a) * m[1])) + ((ic_a_tmp_0 * I8[1]) / cph1_tmp_tmp)) + (Mm_tmp_b * (ob_a * ob_a))) + (((pb_a * pb_a) * I7[0]) / cph1_tmp_tmp)) + (Mm_tmp_c * (tb_a * tb_a))) + ((Mm_tmp_tmp_b * I11[1]) * ob_a_tmp_0)) + ((Mm_tmp_tmp_b * I11[0]) * (vb_a * vb_a))) + (Mm_tmp_g / (ob_a_tmp_0 + (yb_a * yb_a)))) + (((ac_a * ac_a) * I12[2]) / (ob_a_tmp_0 + (cc_a * cc_a)));
+Mm_tmp_0 := Ls5 * R1;
+Mm_tmp_tmp_1 := (2.0 * q[1]) - 5.2359877559829888;
+Mm_tmp_1 := (SIN(Mm_tmp_tmp_1) * R1) / 2.0;
+Mm_tmp_2 := p_a_tmp_tmp * K1;
+Mm_tmp_3 := Mm_tmp_0 * m[4];
+Mm_tmp_5 := L1 * Ls13;
+Mm_tmp_6 := Mm_tmp_5 * m[14];
+Mm_tmp_7 := (Lc13 * Ls13) * m[12];
+Mm_tmp_8 := (Ls6 * R1) * m[7];
+Mm_tmp_0 := Mm_tmp_0 * m[6];
+Mm[3] := (((((Mm_tmp_1 - (SQRT(cph1_tmp_tmp - (dc_a * dc_a)) * i_a_tmp)) + (K1 * p_a_tmp_tmp)) * Mm_tmp_3) / SQRT(cph1_tmp_tmp - (ec_a * ec_a))) + ((((((( -L1) * Ls13) * m[13]) * k_a_tmp_tmp) - (Mm_tmp_6 * k_a_tmp_tmp)) - (Mm_tmp_7 * k_a_tmp_tmp)) - ((Mm_tmp_8 * i_a_tmp) / 2.0))) + ((((Mm_tmp_2 - (mc_a_tmp_tmp_0 * i_a_tmp)) + (r_a_tmp * i_a_tmp)) * Mm_tmp_0) / mc_a_tmp_tmp_0);
+Mm_tmp_d := Lc11 * Ls11;
+Mm_tmp_e := (Mm_tmp_d * R2) * m[10];
+Mm[6] := (((( -Lc15) * Ls13) * m[14]) * o_a_tmp) - (((Mm_tmp_e * ((SIN(q[2] - -0.52359877559829882) * R2) + M2)) * yd_a_tmp_tmp) * mb_a_tmp);
+Mm[1] := (((((Mm_tmp_1 - (SQRT(cph1_tmp_tmp - (fc_a * fc_a)) * i_a_tmp)) + Mm_tmp_2) * Mm_tmp_3) / SQRT(cph1_tmp_tmp - (gc_a * gc_a))) + ((((((( -L1) * Ls13) * m[13]) * SIN(q[1])) - (((L1 * Ls13) * m[14]) * SIN(q[1]))) - (((Lc13 * Ls13) * m[12]) * SIN(q[1]))) - ((((Ls6 * R1) * m[7]) * SIN(q[1] - 2.6179938779914944)) / 2.0))) + (((((COS(q[1] - 2.6179938779914944) * K1) - (((2.0 * b_Le) * cph1) * SIN(q[1] - 2.6179938779914944))) + ((COS(q[1] - 2.6179938779914944) * R1) * SIN(q[1] - 2.6179938779914944))) * ((Ls5 * R1) * m[6])) / ((2.0 * b_Le) * cph1));
+gc_a := L1 * L1;
+Mm_tmp_tmp := i_a_tmp * i_a_tmp;
+i_a := Mm_tmp_tmp_8 * m[7];
+ec_a := i_a * Mm_tmp_tmp;
+p_a := Mm_tmp_tmp_8 * m[6];
+cc_a := mc_a_tmp * mc_a_tmp;
+Mm_tmp_h := (kc_a_tmp - 1.0) * cph1_tmp_tmp;
+Mm[4] := (((((((((((((((((((I1[2] + I4[2]) + I13[2]) + ((ic_a_tmp_1 * ic_a_tmp_1) * m[5])) + (gc_a * m[9])) + (gc_a * m[2])) + ((gc_a * m[3]) / 4.0)) + (gc_a * m[13])) + (gc_a * m[14])) + (Mm_tmp_tmp_4 * m[12])) + (((LC1 * LC1) + (LC1y * LC1y)) * m[0])) + ((kc_a * kc_a) * m[7])) + ((Mm_tmp_9 * m[6]) * cc_a)) + ((Mm_tmp_a * m[6]) * cc_a)) + ((Mm_tmp_9 * m[4]) * (rc_a * rc_a))) + ((Mm_tmp_a * m[4]) * (mb_a * mb_a))) + ((p_a * Mm_tmp_4) / 4.0)) + ((ec_a * Mm_tmp_9) / 4.0)) + ((ec_a * Mm_tmp_a) / 4.0)) - (((Mm_tmp_tmp_8 * I7[2]) * Mm_tmp_4) / ((((cd_a * cd_a) / cph1_tmp_tmp) - 1.0) * cph1_tmp_tmp))) - (((Mm_tmp_tmp_8 * I8[2]) * Mm_tmp_tmp) / Mm_tmp_h);
+gc_a := L1 * L3;
+ec_a := (L1 * L2) * m[3];
+kc_a := (L1 * LC3) * m[2];
+jb_a := (L1 * Lc15) * m[14];
+Mm[7] := ((((gc_a * Mm_tmp) * m[9]) - ((ec_a * Mm_tmp) / 2.0)) + (kc_a * Mm_tmp)) + (jb_a * Mm_tmp);
+Mm[2] := (((( -Lc15) * Ls13) * m[14]) * SIN(q[2])) - ((((((Lc11 * Ls11) * R2) * m[10]) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2)) * yd_a_tmp_tmp) * mb_a_tmp);
+Mm[5] := (((((L1 * L3) * COS(q[1] - q[2])) * m[9]) - ((((L1 * L2) * m[3]) * COS(q[1] - q[2])) / 2.0)) + (((L1 * LC3) * m[2]) * COS(q[1] - q[2]))) + (((L1 * Lc15) * m[14]) * COS(q[1] - q[2]));
+Mm_tmp_tmp_2 := R2 * R2;
+e_a := Mm_tmp_tmp_2 * m[11];
+f_a_tmp := Lc11 * Lc11;
+f_a := ((f_a_tmp * Mm_tmp_tmp_2) * m[10]) * hd_a_tmp;
+ob_a := g_a_tmp_tmp * g_a_tmp_tmp;
+tb_a := e_a * Mm_tmp_9;
+vb_a := e_a * Mm_tmp_a;
+Mm_tmp := yd_a_tmp_tmp * yd_a_tmp_tmp;
+cc_a := ud_a_tmp * ud_a_tmp;
+Mm[8] := ((((((((((((((I2[2] + I3[2]) + I15[2]) + ((L3 * L3) * m[9])) + ((L2 * L2) * m[3])) + ((LC3 * LC3) * m[2])) + ((Lc15 * Lc15) * m[14])) + (((LC2 * LC2) + (LC2y * LC2y)) * m[1])) - (((id_a * id_a) * I12[1]) / ((ob_a_tmp_0 / (ob_a_tmp_0 + (md_a * md_a))) - 1.0))) + (e_a * ob_a)) + (((Mm_tmp_tmp_2 * I11[2]) * nb_a) * (od_a * od_a))) + ((tb_a * (qd_a * qd_a)) / (ob_a_tmp_0 + (sd_a * sd_a)))) + ((vb_a * cc_a) / (ob_a_tmp_0 + (wd_a * wd_a)))) + (((((f_a_tmp * Mm_tmp_tmp_2) * m[10]) * hd_a_tmp) * ob_a_tmp_0) * Mm_tmp)) + (((f_a * Mm_tmp_9) * (be_a * be_a)) * Mm_tmp)) + (((f_a * Mm_tmp_a) * (ee_a * ee_a)) * Mm_tmp);
+(* '<S1>:1:73' V2=[dq1*((dq2*((m13*(8*Lc13*S1*sin(theta4) - 8*Lc13^2*cos(theta4)*sin(theta4) + 4*sqrt((3))*Lc13*S3*sin(theta4)))/4 - (m8*(2*K2*R1*sin(theta4 - theta6) - 4*R1*S1*sin(theta4 - theta6) + 2*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6)))/4 + (m7*(8*R1*S1*sin(theta4 - theta6) - 8*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6) + 4*L7*R1*cph1*sin(theta4 - theta6)))/4 + 2*Ixx1*cos(theta4)*sin(theta4) + 2*Ixx4*cos(theta4)*sin(theta4) + 2*Ixx13*cos(theta4)*sin(theta4) - 2*Iyy1*cos(theta4)*sin(theta4) - 2*Iyy4*cos(theta4)*sin(theta4) - 2*Iyy13*cos(theta4)*sin(theta4) + 2*m1*(LC1y*cos(theta4) - LC1*sin(theta4))*(LC1*cos(theta4) - S1 + LC1y*sin(theta4)) + (L1*m4*sin(theta4)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)))/2 - 2*L1*m3*sin(theta4)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L1*sin(theta4)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) + 2*m5*cos(theta1)*(cos(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) - Ls5*sin(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + 2*m5*sin(theta1)*(sin(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) + Ls5*cos(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + L1*m14*cos(theta1)*sin(theta4)*(cos(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) - 2*Ls13*sin(theta1)) + L1*m14*sin(theta1)*sin(theta4)*(sin(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) + 2*Ls13*cos(theta1)) + (2*Ixx7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 - (2*Ixx8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 - (2*Iyy7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 + (2*Iyy8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 + 2*L1*m15*cos(theta1)*sin(theta4)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*L1*m15*sin(theta1)*sin(theta4)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1))))/2 + (dq3*(2*Ixx2*cos(theta5)*sin(theta5) - 2*m2*(LC2y*cos(theta5) + LC2*sin(theta5))*(S1 + LC2*cos(theta5) - LC2y*sin(theta5)) + 2*Ixx3*cos(theta5)*sin(theta5) + 2*Ixx15*cos(theta5)*sin(theta5) - 2*Iyy2*cos(theta5)*sin(theta5) - 2*Iyy3*cos(theta5)*sin(theta5) - 2*Iyy15*cos(theta5)*sin(theta5) - L2*m4*sin(theta5)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)) - 2*LC3*m3*sin(theta5)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L3*sin(theta5)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) - (Ixx12*(M1 - R2*cos(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 - (Izz12*(M2 + R2*sin(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 + 2*Ixx11*R2*n1^2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*Iyy11*R2*n1^2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)) + 2*Lc15*m15*cos(theta1)*sin(theta5)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*Lc15*m15*sin(theta1)*sin(theta5)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1)) + (2*Ixx12*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (2*Izz12*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (m12*cos(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + (m12*sin(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*cos(theta1)*(cos(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) - Ls11*sin(theta1)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*sin(theta1)*(sin(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) + Ls11*cos(theta1))))/2) - dq3*(dq3*(Lc15*Ls13*m15*cos(theta5) + Lc11*Ls11*R2^2*m11*n1^3*cos(theta5 - theta7)*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7)) + Lc11*Ls11*R2*m11*n1^3*(M2 + R2*sin(theta5 - theta7))*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))) - (dq1*(2*Ixx2*cos(theta5)*sin(theta5) - 2*m2*(LC2y*cos(theta5) + LC2*sin(theta5))*(S1 + LC2*cos(theta5) - LC2y*sin(theta5)) + 2*Ixx3*cos(theta5)*sin(theta5) + 2*Ixx15*cos(theta5)*sin(theta5) - 2*Iyy2*cos(theta5)*sin(theta5) - 2*Iyy3*cos(theta5)*sin(theta5) - 2*Iyy15*cos(theta5)*sin(theta5) - L2*m4*sin(theta5)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)) - 2*LC3*m3*sin(theta5)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L3*sin(theta5)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) - (Ixx12*(M1 - R2*cos(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 - (Izz12*(M2 + R2*sin(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 + 2*Ixx11*R2*n1^2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*Iyy11*R2*n1^2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)) + 2*Lc15*m15*cos(theta1)*sin(theta5)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*Lc15*m15*sin(theta1)*sin(theta5)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1)) + (2*Ixx12*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (2*Izz12*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (m12*cos(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + (m12*sin(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*cos(theta1)*(cos(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) - Ls11*sin(theta1)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*sin(theta1)*(sin(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) + Ls11*cos(theta1))))/2) - dq2*(dq2*(L1*Ls13*m14*cos(theta4) + L1*Ls13*m15*cos(theta4) + Lc13*Ls13*m13*cos(theta4) + (Ls6*R1*m8*cos(theta4 - theta6))/2 + (Ls5*R1*m5*(cos(theta4 - theta6)*sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(2*theta4 - 2*theta6) + K1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*sin(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2))))/sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + (Ls5*R1*m7*(- R1*cos(theta4 - theta6)^2 + 2*L7*cph1*cos(theta4 - theta6) + R1*sin(theta4 - theta6)^2 + K1*sin(theta4 - theta6)))/(2*L7*cph1) - (Ls5*R1^2*m5*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6))*((R1*sin(2*theta4 - 2*theta6))/2 - sin(theta4 - theta6)*sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + K1*cos(theta4 - theta6)))/(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)^(3/2)) - (dq1*((m13*(8*Lc13*S1*sin(theta4) - 8*Lc13^2*cos(theta4)*sin(theta4) + 4*sqrt((3))*Lc13*S3*sin(theta4)))/4 - (m8*(2*K2*R1*sin(theta4 - theta6) - 4*R1*S1*sin(theta4 - theta6) + 2*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6)))/4 + (m7*(8*R1*S1*sin(theta4 - theta6) - 8*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6) + 4*L7*R1*cph1*sin(theta4 - theta6)))/4 + 2*Ixx1*cos(theta4)*sin(theta4) + 2*Ixx4*cos(theta4)*sin(theta4) + 2*Ixx13*cos(theta4)*sin(theta4) - 2*Iyy1*cos(theta4)*sin(theta4) - 2*Iyy4*cos(theta4)*sin(theta4) - 2*Iyy13*cos(theta4)*sin(theta4) + 2*m1*(LC1y*cos(theta4) - LC1*sin(theta4))*(LC1*cos(theta4) - S1 + LC1y*sin(theta4)) + (L1*m4*sin(theta4)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)))/2 - 2*L1*m3*sin(theta4)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L1*sin(theta4)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) + 2*m5*cos(theta1)*(cos(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) - Ls5*sin(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + 2*m5*sin(theta1)*(sin(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) + Ls5*cos(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + L1*m14*cos(theta1)*sin(theta4)*(cos(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) - 2*Ls13*sin(theta1)) + L1*m14*sin(theta1)*sin(theta4)*(sin(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) + 2*Ls13*cos(theta1)) + (2*Ixx7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 - (2*Ixx8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 - (2*Iyy7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 + (2*Iyy8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 + 2*L1*m15*cos(theta1)*sin(theta4)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*L1*m15*sin(theta1)*sin(theta4)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1))))/2); dq3^2*(L1*L3*sin(theta4 - theta5)*(m10 + mload) - (L1*L2*m4*sin(theta4 - theta5))/2 + L1*LC3*m3*sin(theta4 - theta5) + L1*Lc15*m15*sin(theta4 - theta5)) + (dq2^2*(2*m5*cos(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2))*(R1*cos(theta4 - theta6) - (R1^2*cos(theta4 - theta6)^2)/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + (R1*sin(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) - (R1^2*cos(theta4 - theta6)^2*(K1 + R1*sin(theta4 - theta6))^2)/(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)^(3/2)) - 2*m6*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/sqrt(L7^2 - (K2 - R1*cos(theta4 - theta6))^2))*(R1*sin(theta4 - theta6) + (R1^2*sin(theta4 - theta6)^2)/sqrt(L7^2 - (K2 - R1*cos(theta4 - theta6))^2) + (R1*cos(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/sqrt(L7^2 - (K2 - R1*cos(theta4 - theta6))^2) + (R1^2*sin(theta4 - theta6)^2*(K2 - R1*cos(theta4 - theta6))^2)/(L7^2 - (K2 - R1*cos(theta4 - theta6))^2)^(3/2)) - 2*m8*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/(2*L8*sqrt(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2)))*(R1*sin(theta4 - theta6) + (R1^2*sin(theta4 - theta6)^2)/(2*L8*sqrt(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2)) + (R1*cos(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/(2*L8*sqrt(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2)) + (R1^2*sin(theta4 - theta6)^2*(K2 - R1*cos(theta4 - theta6))^2)/(2*L8^3*(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2)^(3/2))) + 2*m5*sin(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2))*(R1*cos(theta4 - theta6) - (R1^2*cos(theta4 - theta6)^2)/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) + (R1*sin(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2) - (R1^2*cos(theta4 - theta6)^2*(K1 + R1*sin(theta4 - theta6))^2)/(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)^(3/2)) + 2*m7*cos(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1))*(R1*cos(theta4 - theta6) - (R1^2*cos(theta4 - theta6)^2)/(2*L7*cph1) + (R1*sin(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1)) + 2*m7*sin(theta1)^2*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1))*(R1*cos(theta4 - theta6) - (R1^2*cos(theta4 - theta6)^2)/(2*L7*cph1) + (R1*sin(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/(2*L7*cph1)) - (R1^2*m7*cos(theta4 - theta6)*sin(theta4 - theta6))/2 + (R1^2*m8*cos(theta4 - theta6)*sin(theta4 - theta6)*cos(theta1)^2)/2 + (R1^2*m8*cos(theta4 - theta6)*sin(theta4 - theta6)*sin(theta1)^2)/2 + (2*Izz8*R1^3*sin(theta4 - theta6)^3*(K2 - R1*cos(theta4 - theta6)))/(L8^4*((K2 - R1*cos(theta4 - theta6))^2/L8^2 - 1)^2) + (2*Izz7*R1^3*cos(theta4 - theta6)^3*(K1 + R1*sin(theta4 - theta6)))/(L7^4*((K1 + R1*sin(theta4 - theta6))^2/L7^2 - 1)^2) - (2*Izz8*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6))/(L8^2*((K2 - R1*cos(theta4 - theta6))^2/L8^2 - 1)) + (2*Izz7*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6))/(L7^2*((K1 + R1*sin(theta4 - theta6))^2/L7^2 - 1))))/2 - (dq1^2*((m13*(8*Lc13*S1*sin(theta4) - 8*Lc13^2*cos(theta4)*sin(theta4) + 4*sqrt((3))*Lc13*S3*sin(theta4)))/4 - (m8*(2*K2*R1*sin(theta4 - theta6) - 4*R1*S1*sin(theta4 - theta6) + 2*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6)))/4 + (m7*(8*R1*S1*sin(theta4 - theta6) - 8*R1^2*cos(theta4 - theta6)*sin(theta4 - theta6) + 4*L7*R1*cph1*sin(theta4 - theta6)))/4 + 2*Ixx1*cos(theta4)*sin(theta4) + 2*Ixx4*cos(theta4)*sin(theta4) + 2*Ixx13*cos(theta4)*sin(theta4) - 2*Iyy1*cos(theta4)*sin(theta4) - 2*Iyy4*cos(theta4)*sin(theta4) - 2*Iyy13*cos(theta4)*sin(theta4) + 2*m1*(LC1y*cos(theta4) - LC1*sin(theta4))*(LC1*cos(theta4) - S1 + LC1y*sin(theta4)) + (L1*m4*sin(theta4)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)))/2 - 2*L1*m3*sin(theta4)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L1*sin(theta4)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) + 2*m5*cos(theta1)*(cos(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) - Ls5*sin(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + 2*m5*sin(theta1)*(sin(theta1)*(S1 + sqrt((L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) - R1*cos(theta4 - theta6)) + Ls5*cos(theta1))*(R1*sin(theta4 - theta6) - (R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/sqrt(L7^2 - (K1 + R1*sin(theta4 - theta6))^2)) + L1*m14*cos(theta1)*sin(theta4)*(cos(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) - 2*Ls13*sin(theta1)) + L1*m14*sin(theta1)*sin(theta4)*(sin(theta1)*(Lc14y + 2*S1 - sqrt((3))*Lc14 + sqrt((3))*S3 - 2*L1*cos(theta4)) + 2*Ls13*cos(theta1)) + (2*Ixx7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 - (2*Ixx8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 - (2*Iyy7*R1*cos(theta4 - theta6)*(K1 + R1*sin(theta4 - theta6)))/L7^2 + (2*Iyy8*R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/L8^2 + 2*L1*m15*cos(theta1)*sin(theta4)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*L1*m15*sin(theta1)*sin(theta4)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1))))/2; (dq3^2*(2*Izz11*R2^2*n1^4*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7)) - (2*Iyy12*((R2*sin(theta5 - theta7))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) - ((M1 - R2*cos(theta5 - theta7))*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/(2*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)))*((R2*cos(theta5 - theta7))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + (3*(M1 - R2*cos(theta5 - theta7))*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))^2)/(4*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(5/2)) - ((M1 - R2*cos(theta5 - theta7))*(2*R2^2*cos(theta5 - theta7)^2 + 2*R2^2*sin(theta5 - theta7)^2 + 2*R2*cos(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)) - 2*R2*sin(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7))))/(2*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)) - (R2*sin(theta5 - theta7)*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)))/((M1 - R2*cos(theta5 - theta7))^2/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) - 1) - 2*R2^2*m12*cos(theta5 - theta7)*sin(theta5 - theta7) - (Iyy12*(((M1 - R2*cos(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 - (2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))*((R2*sin(theta5 - theta7))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) - ((M1 - R2*cos(theta5 - theta7))*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/(2*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)))^2)/((M1 - R2*cos(theta5 - theta7))^2/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) - 1)^2 - (R2^2*m12*cos(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 - (R2^2*m12*sin(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))^2)/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 + (2*R2^2*m12*cos(theta1)^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(M1*cos(theta5 - theta7) - M2*sin(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (2*R2^2*m12*sin(theta1)^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(M1*cos(theta5 - theta7) - M2*sin(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + 2*Lc11^2*R2^3*m11*n1^6*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2 + 2*Lc11^2*R2^2*m11*n1^6*(M1 - R2*cos(theta5 - theta7))^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7)) + 2*Lc11^2*R2^2*m11*n1^6*cos(theta1)^2*(M2 + R2*sin(theta5 - theta7))^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7)) + 2*Lc11^2*R2^2*m11*n1^6*sin(theta1)^2*(M2 + R2*sin(theta5 - theta7))^2*(M2*cos(theta5 - theta7) + M1*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7)) + 2*Lc11^2*R2^3*m11*n1^6*cos(theta5 - theta7)*cos(theta1)^2*(M2 + R2*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2 + 2*Lc11^2*R2^3*m11*n1^6*cos(theta5 - theta7)*sin(theta1)^2*(M2 + R2*sin(theta5 - theta7))*(R2 - M1*cos(theta5 - theta7) + M2*sin(theta5 - theta7))^2))/2 - dq2^2*(L1*L3*sin(theta4 - theta5)*(m10 + mload) - (L1*L2*m4*sin(theta4 - theta5))/2 + L1*LC3*m3*sin(theta4 - theta5) + L1*Lc15*m15*sin(theta4 - theta5)) - (dq1^2*(2*Ixx2*cos(theta5)*sin(theta5) - 2*m2*(LC2y*cos(theta5) + LC2*sin(theta5))*(S1 + LC2*cos(theta5) - LC2y*sin(theta5)) + 2*Ixx3*cos(theta5)*sin(theta5) + 2*Ixx15*cos(theta5)*sin(theta5) - 2*Iyy2*cos(theta5)*sin(theta5) - 2*Iyy3*cos(theta5)*sin(theta5) - 2*Iyy15*cos(theta5)*sin(theta5) - L2*m4*sin(theta5)*(2*S1 - L1*cos(theta4) + 2*L2*cos(theta5)) - 2*LC3*m3*sin(theta5)*(L1*cos(theta4) - S1 + LC3*cos(theta5)) - 2*L3*sin(theta5)*(m10 + mload)*(Lcx10 - S1 + L1*cos(theta4) + L3*cos(theta5)) - (Ixx12*(M1 - R2*cos(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 - (Izz12*(M2 + R2*sin(theta5 - theta7))^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^2 + 2*Ixx11*R2*n1^2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*Iyy11*R2*n1^2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)) + 2*Lc15*m15*cos(theta1)*sin(theta5)*(cos(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) - Ls13*sin(theta1)) + 2*Lc15*m15*sin(theta1)*sin(theta5)*(sin(theta1)*(S1 + (sqrt((2))*S4)/2 - L1*cos(theta4) - Lc15*cos(theta5)) + Ls13*cos(theta1)) + (2*Ixx12*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (2*Izz12*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)))/((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2) + (m12*cos(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + (m12*sin(theta1)^2*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7)))*(M1 - S1 + sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*cos(theta1)*(cos(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) - Ls11*sin(theta1)) + 2*Lc11*R2*m11*n1*sin(theta5 - theta7)*sin(theta1)*(sin(theta1)*(S1 - M1 + Lc11*n1*(M1 - R2*cos(theta5 - theta7))) + Ls11*cos(theta1))))/2]; *)
+e_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+f_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+g_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+h_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+k_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+j_a := ob_a_tmp_0 + (k_a * k_a);
+k_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+m_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+l_a := ob_a_tmp_0 + (m_a * m_a);
+n_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+o_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+cb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+kb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+pb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ub_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+xb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+wb_a := ob_a_tmp_0 + (xb_a * xb_a);
+xb_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ac_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+yb_a := ob_a_tmp_0 + (ac_a * ac_a);
+bc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+dc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+fc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ic_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+mc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+rc_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+mb_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+cd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ed_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+id_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+kd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ld_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+md_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+od_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+qd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ac_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+sd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+be_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ee_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+wd_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+m_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ph_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+qh_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+sh_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+th_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+di_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+di_a := ((di_a * di_a) / cph1_tmp_tmp) - 1.0;
+gi_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+hi_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ii_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ji_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+ki_a := (SIN(q[1] - 2.6179938779914944) * R1) + K1;
+mi_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+oi_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+qi_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ri_a_tmp := (((SIN(q[2] - -0.52359877559829882) * R2) + M2) * ((2.0 * R2) * COS(q[2] - -0.52359877559829882))) + ((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * ((2.0 * R2) * SIN(q[2] - -0.52359877559829882)));
+ti_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+xi_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+aj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+dj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+gj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+gj_a := ob_a_tmp_0 + (gj_a * gj_a);
+jj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+lj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+nj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+kj_a_tmp := ((((SIN(q[2] - -0.52359877559829882) * R2) + M2) * ((2.0 * R2) * COS(q[2] - -0.52359877559829882))) + ((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * ((2.0 * R2) * SIN(q[2] - -0.52359877559829882)))) * (M1 - (COS(q[2] - -0.52359877559829882) * R2));
+kj_a := (id_a_tmp / SQRT(ob_a_tmp_0 + (lj_a * lj_a))) - (kj_a_tmp / (EXPT(ob_a_tmp_0 + (nj_a * nj_a), 1.5) * 2.0));
+nj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+lj_a := (ob_a_tmp_0 / (ob_a_tmp_0 + (nj_a * nj_a))) - 1.0;
+nj_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+nj_a := ob_a_tmp_0 + (nj_a * nj_a);
+ck_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ck_a := ob_a_tmp_0 + (ck_a * ck_a);
+gk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+jk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+nk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+pk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+wk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+vk_a := ob_a_tmp_0 + (wk_a * wk_a);
+wk_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+bl_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+bl_a := ob_a_tmp_0 + (bl_a * bl_a);
+el_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+gl_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+jl_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ll_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ol_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+ql_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+(* '<S1>:1:74' G_dot=[(0); - g*m6*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/sqrt(L7^2 - (K2 - R1*cos(theta4 - theta6))^2)) - g*m1*(LC1*cos(theta4) + LC1y*sin(theta4)) - g*m8*(R1*cos(theta4 - theta6) - (R1*sin(theta4 - theta6)*(K2 - R1*cos(theta4 - theta6)))/(2*L8*sqrt(1 - (K2 - R1*cos(theta4 - theta6))^2/L8^2))) - L1*g*cos(theta4)*(m10 + mload) - L1*g*m3*cos(theta4) - (L1*g*m4*cos(theta4))/2 - L1*g*m14*cos(theta4) - L1*g*m15*cos(theta4) - Lc13*g*m13*cos(theta4) - (R1*g*m7*cos(theta4 - theta6))/2; g*m11*((Lc11*(M2 + R2*sin(theta5 - theta7))*(2*R2*cos(theta5 - theta7)*(M2 + R2*sin(theta5 - theta7)) + 2*R2*sin(theta5 - theta7)*(M1 - R2*cos(theta5 - theta7))))/(2*((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2)^(3/2)) - (Lc11*R2*cos(theta5 - theta7))/sqrt(((M1 - R2*cos(theta5 - theta7))^2 + (M2 + R2*sin(theta5 - theta7))^2))) + g*m2*(LC2*cos(theta5) - LC2y*sin(theta5)) - L3*g*cos(theta5)*(m10 + mload) + L2*g*m4*cos(theta5) - LC3*g*m3*cos(theta5) - Lc15*g*m15*cos(theta5) - R2*g*m12*cos(theta5 - theta7)]; *)
+ul_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+wl_a := (SIN(q[2] - -0.52359877559829882) * R2) + M2;
+(* '<S1>:1:77' tau=(Mm*d2q+V2+G_dot)*10^-6; *)
+(* '<S1>:1:79' jacobian=[-sin(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*cos(theta1)*sin(theta4) -L3*cos(theta1)*sin(theta5) ; *)
+(* '<S1>:1:80'     cos(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*sin(theta1)*sin(theta4) -L3*sin(theta1)*sin(theta5) ; *)
+(* '<S1>:1:81'     0 L1*cos(theta4) L3*cos(theta5) ]; *)
+(* '<S1>:1:82' G_load=[0,0,mload*g].'; *)
+(* '<S1>:1:82' Fa_load=mload*a; *)
+(* '<S1>:1:83' tau=tau-jacobian.'*(-Fa_load+G_load)*10^(-6); *)
+Mm_tmp_tmp_0 := SIN(Mm_tmp_tmp_0);
+tau_tmp := EXPT(R1, 3.0);
+tau_tmp_0 := EXPT(b_Le, 4.0);
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+dq_tmp_tmp := L1 * m[13];
+dq_tmp_tmp_0 := (2.0 * L1) * m[14];
+dq_tmp_tmp_1 := (2.0 * Lc15) * m[14];
+Mm_tmp_b := ri_a_tmp * Mm_tmp_b;
+Mm_tmp_c := ri_a_tmp * Mm_tmp_c;
+dq_tmp := Ls5 * SIN(q[0]);
+dq_tmp_0 := Ls5 * COS(q[0]);
+dq_tmp_tmp_3 := (2.0 * m[4]) * e_a_tmp_tmp;
+Mm_tmp_tmp_4 := ((((((((((((((((Mm_tmp_tmp_3 * k_a_tmp_tmp) - (((Mm_tmp_tmp_4 * 8.0) * b_a) * k_a_tmp_tmp)) + (Mm_tmp_tmp_5 * k_a_tmp_tmp)) * m[12]) / 4.0) - (((((Mm_tmp_tmp_6 * i_a_tmp) - (Mm_tmp_tmp_7 * i_a_tmp)) + (((Mm_tmp_tmp_8 * 2.0) * p_a_tmp_tmp) * i_a_tmp)) * m[7]) / 4.0)) + (((((Mm_tmp_tmp_9 * i_a_tmp) - (((Mm_tmp_tmp_8 * 8.0) * p_a_tmp_tmp) * i_a_tmp)) + (Mm_tmp_tmp_a * i_a_tmp)) * m[6]) / 4.0)) + (((2.0 * I1[0]) * b_a) * k_a_tmp_tmp)) + (((2.0 * I4[0]) * b_a) * k_a_tmp_tmp)) + (((2.0 * I13[0]) * b_a) * k_a_tmp_tmp)) - (((2.0 * I1[1]) * b_a) * k_a_tmp_tmp)) - (((2.0 * I4[1]) * b_a) * k_a_tmp_tmp)) - (((2.0 * I13[1]) * b_a) * k_a_tmp_tmp)) + ((((LC1y * b_a) - (LC1 * k_a_tmp_tmp)) * (2.0 * m[0])) * (((LC1 * COS(q[1])) - S1) + (LC1y * SIN(q[1]))))) + (((((2.0 * S1) - (L1 * COS(q[1]))) + ((2.0 * L2) * COS(q[2]))) * ((L1 * m[3]) * k_a_tmp_tmp)) / 2.0)) - ((((2.0 * L1) * m[2]) * k_a_tmp_tmp) * (((L1 * COS(q[1])) - S1) + (LC3 * COS(q[2]))))) - ((((2.0 * L1) * k_a_tmp_tmp) * m[9]) * (((Lcx10 - S1) + (L1 * COS(q[1]))) + (L3 * COS(q[2]))));
+Mm_tmp_tmp_3 := (2.0 * m[4]) * e_a_tmp_tmp_0;
+Mm_tmp_tmp_5 := (((((((2.0 * S1) + Lc14y) - (1.7320508075688772 * Lc14)) + (1.7320508075688772 * S3)) - ((2.0 * L1) * COS(q[1]))) * COS(q[0])) - ((2.0 * Ls13) * SIN(q[0]))) * ((dq_tmp_tmp * e_a_tmp_tmp) * k_a_tmp_tmp);
+dq_tmp_tmp := (((((((2.0 * S1) + Lc14y) - (1.7320508075688772 * Lc14)) + (1.7320508075688772 * S3)) - ((2.0 * L1) * COS(q[1]))) * SIN(q[0])) + ((2.0 * Ls13) * COS(q[0]))) * ((dq_tmp_tmp * e_a_tmp_tmp_0) * k_a_tmp_tmp);
+Mm_tmp_tmp_6 := ((((2.0 * I7[0]) * R1) * p_a_tmp_tmp) * ((SIN(q[1] - 2.6179938779914944) * R1) + K1)) / cph1_tmp_tmp;
+Mm_tmp_tmp_7 := ((((2.0 * I8[0]) * R1) * i_a_tmp) * (K1 - (COS(q[1] - 2.6179938779914944) * R1))) / cph1_tmp_tmp;
+Mm_tmp_tmp_9 := ((((2.0 * I7[1]) * R1) * p_a_tmp_tmp) * ((SIN(q[1] - 2.6179938779914944) * R1) + K1)) / cph1_tmp_tmp;
+Mm_tmp_tmp_a := ((((2.0 * I8[1]) * R1) * i_a_tmp) * (K1 - (COS(q[1] - 2.6179938779914944) * R1))) / cph1_tmp_tmp;
+dq_tmp_tmp_4 := (((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * COS(q[1]))) - (Lc15 * COS(q[2]))) * COS(q[0])) - (Ls13 * SIN(q[0]))) * ((dq_tmp_tmp_0 * e_a_tmp_tmp) * k_a_tmp_tmp);
+dq_tmp_tmp_0 := (((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * COS(q[1]))) - (Lc15 * COS(q[2]))) * SIN(q[0])) + (Ls13 * COS(q[0]))) * ((dq_tmp_tmp_0 * e_a_tmp_tmp_0) * k_a_tmp_tmp);
+k_a_tmp_tmp := (((((((((((2.0 * I2[0]) * e_a_tmp_tmp_1) * o_a_tmp) - ((((LC2y * e_a_tmp_tmp_1) + (LC2 * o_a_tmp)) * (2.0 * m[1])) * (((LC2 * COS(q[2])) + S1) - (LC2y * SIN(q[2]))))) + (((2.0 * I3[0]) * e_a_tmp_tmp_1) * o_a_tmp)) + (((2.0 * I15[0]) * e_a_tmp_tmp_1) * o_a_tmp)) - (((2.0 * I2[1]) * e_a_tmp_tmp_1) * o_a_tmp)) - (((2.0 * I3[1]) * e_a_tmp_tmp_1) * o_a_tmp)) - (((2.0 * I15[1]) * e_a_tmp_tmp_1) * o_a_tmp)) - ((((2.0 * S1) - (L1 * COS(q[1]))) + ((2.0 * L2) * COS(q[2]))) * ((L2 * m[3]) * o_a_tmp))) - ((((2.0 * LC3) * m[2]) * o_a_tmp) * (((L1 * COS(q[1])) - S1) + (LC3 * COS(q[2]))))) - ((((2.0 * L3) * o_a_tmp) * m[9]) * (((Lcx10 - S1) + (L1 * COS(q[1]))) + (L3 * COS(q[2]))));
+dq_tmp_tmp_5 := ((((2.0 * I11[0]) * R2) * Mm_tmp_tmp_b) * g_a_tmp_tmp) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2);
+dq_tmp_1 := ((((2.0 * I11[1]) * R2) * Mm_tmp_tmp_b) * nb_a_tmp_tmp) * mb_a_tmp_tmp;
+dq_tmp_tmp_6 := (((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * COS(q[1]))) - (Lc15 * COS(q[2]))) * COS(q[0])) - (Ls13 * SIN(q[0]))) * ((dq_tmp_tmp_1 * e_a_tmp_tmp) * o_a_tmp);
+dq_tmp_tmp_1 := (((((((1.4142135623730951 * S4) / 2.0) + S1) - (L1 * COS(q[1]))) - (Lc15 * COS(q[2]))) * SIN(q[0])) + (Ls13 * COS(q[0]))) * ((dq_tmp_tmp_1 * e_a_tmp_tmp_0) * o_a_tmp);
+o_a_tmp := (((2.0 * I12[0]) * R2) * nb_a_tmp_tmp) * mb_a_tmp_tmp;
+dq_tmp_tmp_7 := (((2.0 * I12[2]) * R2) * g_a_tmp_tmp) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2);
+dq_tmp_tmp_2 := ((((2.0 * Lc11) * R2) * m[10]) * n1) * nb_a_tmp_tmp;
+dq_tmp_tmp_8 := (((((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * (Lc11 * n1)) + (S1 - M1)) * COS(q[0])) - (Ls11 * SIN(q[0]))) * (dq_tmp_tmp_2 * e_a_tmp_tmp);
+dq_tmp_tmp_2 := (((((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * (Lc11 * n1)) + (S1 - M1)) * SIN(q[0])) + (Ls11 * COS(q[0]))) * (dq_tmp_tmp_2 * e_a_tmp_tmp_0);
+Mm_tmp_g := ri_a_tmp * Mm_tmp_g;
+dq_0[0] := (((((((((((((((Mm_tmp_tmp_4 + ((((((SQRT(cph1_tmp_tmp - (e_a * e_a)) + S1) - r_a_tmp) * e_a_tmp_tmp) - dq_tmp) * dq_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (f_a * f_a)))))) + ((((((SQRT(cph1_tmp_tmp - (g_a * g_a)) + S1) - r_a_tmp) * e_a_tmp_tmp_0) + dq_tmp_0) * Mm_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (h_a * h_a)))))) + Mm_tmp_tmp_5) + dq_tmp_tmp) + Mm_tmp_tmp_6) - (((((2.0 * I8[0]) * R1) * i_a_tmp) * u_a_tmp) / cph1_tmp_tmp)) - Mm_tmp_tmp_9) + (((((2.0 * I8[1]) * R1) * i_a_tmp) * u_a_tmp) / cph1_tmp_tmp)) + dq_tmp_tmp_4) + dq_tmp_tmp_0) * dq[1]) / 2.0) + ((((((((((((((k_a_tmp_tmp - (Mm_tmp_g / (j_a * j_a))) - ((ri_a_tmp * ((k_a * k_a) * I12[2])) / (l_a * l_a))) + dq_tmp_tmp_5) + (((((2.0 * I11[1]) * R2) * Mm_tmp_tmp_b) * nb_a_tmp_tmp) * mb_a_tmp_tmp)) + dq_tmp_tmp_6) + dq_tmp_tmp_1) + (((((2.0 * I12[0]) * R2) * nb_a_tmp_tmp) * mb_a_tmp_tmp) / (ob_a_tmp_0 + (n_a * n_a)))) + (dq_tmp_tmp_7 / (ob_a_tmp_0 + (o_a * o_a)))) + ((Mm_tmp_b * (SQRT(ob_a_tmp_0 + (cb_a * cb_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (kb_a * kb_a)))) + ((Mm_tmp_c * (SQRT(ob_a_tmp_0 + (pb_a * pb_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (ub_a * ub_a)))) + dq_tmp_tmp_8) + dq_tmp_tmp_2) * dq[2]) / 2.0)) * dq[0]) - ((((((((((Mm_tmp_d * Mm_tmp_tmp_2) * m[10]) * mb_a_tmp) * g_a_tmp_tmp) * yd_a_tmp_tmp) + (((Lc15 * Ls13) * m[14]) * e_a_tmp_tmp_1)) + (((Mm_tmp_e * mb_a_tmp) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2)) * ud_a_tmp)) * dq[2]) - ((((((((((((((k_a_tmp_tmp - (Mm_tmp_g / (wb_a * wb_a))) - ((ri_a_tmp * ((xb_a * xb_a) * I12[2])) / (yb_a * yb_a))) + dq_tmp_tmp_5) + dq_tmp_1) + dq_tmp_tmp_6) + dq_tmp_tmp_1) + (o_a_tmp / (ob_a_tmp_0 + (bc_a * bc_a)))) + (dq_tmp_tmp_7 / (ob_a_tmp_0 + (dc_a * dc_a)))) + ((Mm_tmp_b * (SQRT(ob_a_tmp_0 + (fc_a * fc_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (ic_a * ic_a)))) + ((Mm_tmp_c * (SQRT(ob_a_tmp_0 + (mc_a * mc_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (rc_a * rc_a)))) + dq_tmp_tmp_8) + dq_tmp_tmp_2) * dq[0]) / 2.0)) * dq[2])) - ((((((((((((SQRT(cph1_tmp_tmp - (mb_a * mb_a)) * p_a_tmp_tmp) - (COS(Mm_tmp_tmp_1) * R1)) + (K1 * i_a_tmp)) - ((((COS(q[1] - 2.6179938779914944) * R1) * SIN(q[1] - 2.6179938779914944)) * ((SIN(q[1] - 2.6179938779914944) * R1) + K1)) / SQRT(cph1_tmp_tmp - (cd_a * cd_a)))) * Mm_tmp_3) / SQRT(cph1_tmp_tmp - (ed_a * ed_a))) + (((((Mm_tmp_5 * m[13]) * b_a) + (Mm_tmp_6 * b_a)) + (Mm_tmp_7 * b_a)) + ((Mm_tmp_8 * p_a_tmp_tmp) / 2.0))) + ((((((mc_a_tmp_tmp_0 * p_a_tmp_tmp) + (Mm_tmp_4 * ( -R1))) + (Mm_tmp_tmp * R1)) + (SIN(q[1] - 2.6179938779914944) * K1)) * Mm_tmp_0) / mc_a_tmp_tmp_0)) - ((((Mm_tmp_1 - (SQRT(cph1_tmp_tmp - (id_a * id_a)) * i_a_tmp)) + Mm_tmp_2) * ((((Mm_tmp_tmp_8 * Ls5) * m[4]) * p_a_tmp_tmp) * ((SIN(q[1] - 2.6179938779914944) * R1) + K1))) / EXPT(cph1_tmp_tmp - (kd_a * kd_a), 1.5))) * dq[1]) - ((((((((((((Mm_tmp_tmp_4 + ((((((SQRT(cph1_tmp_tmp - (ld_a * ld_a)) + S1) - r_a_tmp) * e_a_tmp_tmp) - dq_tmp) * dq_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (md_a * md_a)))))) + ((((((SQRT(cph1_tmp_tmp - (od_a * od_a)) + S1) - r_a_tmp) * e_a_tmp_tmp_0) + dq_tmp_0) * Mm_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (qd_a * qd_a)))))) + Mm_tmp_tmp_5) + dq_tmp_tmp) + Mm_tmp_tmp_6) - Mm_tmp_tmp_7) - Mm_tmp_tmp_9) + Mm_tmp_tmp_a) + dq_tmp_tmp_4) + dq_tmp_tmp_0) * dq[0]) / 2.0)) * dq[1]);
+e_a := Mm_tmp_tmp_8 * Mm_tmp_tmp;
+f_a := u_a_tmp * r_a_tmp;
+g_a := ((SIN(q[1] - 2.6179938779914944) * R1) + K1) * ic_a_tmp_tmp;
+h_a := (g_a / mc_a_tmp_tmp_0) + (r_a_tmp - (Mm_tmp_f / mc_a_tmp_tmp_0));
+o_a := dq[2] * dq[2];
+mc_a_tmp_tmp_0 := dq[1] * dq[1];
+mb_a := dq[0] * dq[0];
+kc_a_tmp_0 := kc_a_tmp_0 * (2.0 * b_Le);
+ic_a_tmp_0 := e_a * ic_a_tmp_0;
+ic_a_tmp := r_a_tmp - (ic_a_tmp / kc_a_tmp_0);
+dq_0[1] := ((((((((((((((((((ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (ac_a * ac_a)))) * ((2.0 * m[4]) * Mm_tmp_9)) * (((g_a / SQRT(cph1_tmp_tmp - (be_a * be_a))) + (r_a_tmp - (Mm_tmp_f / SQRT(cph1_tmp_tmp - (sd_a * sd_a))))) - ((Mm_tmp_f * (ee_a * ee_a)) / EXPT(cph1_tmp_tmp - (wd_a * wd_a), 1.5)))) - ((ic_a_tmp_1 * (2.0 * m[5])) * (((f_a / ic_a_tmp_tmp_0) + ((e_a / ic_a_tmp_tmp_0) + ic_a_tmp_tmp)) + (ic_a_tmp_0 / EXPT(ic_a_tmp_tmp_tmp, 1.5))))) - (((((e_a / kc_a_tmp_0) + ic_a_tmp_tmp) + (f_a / kc_a_tmp_0)) + (ic_a_tmp_0 / (EXPT(1.0 - kc_a_tmp, 1.5) * (2.0 * EXPT(b_Le, 3.0))))) * (ic_a_tmp * (2.0 * m[7])))) + (((ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (m_a * m_a)))) * ((2.0 * m[4]) * Mm_tmp_a)) * (((g_a / SQRT(cph1_tmp_tmp - (qh_a * qh_a))) + (r_a_tmp - (Mm_tmp_f / SQRT(cph1_tmp_tmp - (ph_a * ph_a))))) - ((Mm_tmp_f * (sh_a * sh_a)) / EXPT(cph1_tmp_tmp - (th_a * th_a), 1.5))))) + ((mc_a_tmp * ((2.0 * m[6]) * Mm_tmp_9)) * h_a)) + ((mc_a_tmp * ((2.0 * m[6]) * Mm_tmp_a)) * h_a)) - (((p_a * p_a_tmp_tmp) * i_a_tmp) / 2.0)) + ((((i_a * p_a_tmp_tmp) * i_a_tmp) * Mm_tmp_9) / 2.0)) + ((((((R1 * R1) * m[7]) * COS(q[1] - 2.6179938779914944)) * SIN(q[1] - 2.6179938779914944)) * Mm_tmp_a) / 2.0)) + (((((2.0 * I8[2]) * tau_tmp) * EXPT(i_a_tmp, 3.0)) * u_a_tmp) / (((kc_a_tmp - 1.0) * (kc_a_tmp - 1.0)) * tau_tmp_0))) + (((((2.0 * I7[2]) * tau_tmp) * EXPT(p_a_tmp_tmp, 3.0)) * ((SIN(q[1] - 2.6179938779914944) * R1) + K1)) / ((di_a * di_a) * tau_tmp_0))) - (((((2.0 * I8[2]) * Mm_tmp_tmp_8) * p_a_tmp_tmp) * i_a_tmp) / Mm_tmp_h)) + (((((2.0 * I7[2]) * Mm_tmp_tmp_8) * p_a_tmp_tmp) * i_a_tmp) / ((((gi_a * gi_a) / cph1_tmp_tmp) - 1.0) * cph1_tmp_tmp))) * mc_a_tmp_tmp_0) / 2.0) + ((((((gc_a * Mm_tmp_tmp_0) * m[9]) - ((ec_a * Mm_tmp_tmp_0) / 2.0)) + (kc_a * Mm_tmp_tmp_0)) + (jb_a * Mm_tmp_tmp_0)) * o_a)) - ((((((((((((Mm_tmp_tmp_4 + ((((((SQRT(cph1_tmp_tmp - (hi_a * hi_a)) + S1) - r_a_tmp) * e_a_tmp_tmp) - dq_tmp) * dq_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (ii_a * ii_a)))))) + ((((((SQRT(cph1_tmp_tmp - (ji_a * ji_a)) + S1) - r_a_tmp) * e_a_tmp_tmp_0) + dq_tmp_0) * Mm_tmp_tmp_3) * (ic_a_tmp_tmp - (mc_a_tmp_tmp / SQRT(cph1_tmp_tmp - (ki_a * ki_a)))))) + Mm_tmp_tmp_5) + dq_tmp_tmp) + Mm_tmp_tmp_6) - Mm_tmp_tmp_7) - Mm_tmp_tmp_9) + Mm_tmp_tmp_a) + dq_tmp_tmp_4) + dq_tmp_tmp_0) * mb_a) / 2.0);
+e_a := Mm_tmp_tmp_2 * 2.0;
+f_a := e_a * m[11];
+g_a := (COS(q[2] - -0.52359877559829882) * M1) - (SIN(q[2] - -0.52359877559829882) * M2);
+dq_tmp := f_a_tmp * 2.0;
+dq_tmp_0 := ((((Lc11 * Lc11) * 2.0) * Mm_tmp_tmp_2) * m[10]) * hd_a_tmp;
+dq_0[2] := (((((((((((((((((((((2.0 * I11[2]) * Mm_tmp_tmp_2) * nb_a) * ud_a_tmp) * yd_a_tmp_tmp) - ((((((((mb_a_tmp_tmp * 3.0) * (ri_a_tmp * ri_a_tmp)) / (EXPT(ob_a_tmp_0 + (ti_a * ti_a), 2.5) * 4.0)) + ((COS(q[2] - -0.52359877559829882) * R2) / SQRT(ob_a_tmp_0 + (qi_a * qi_a)))) - ((((((e_a * ob_a) + (e_a * (nb_a_tmp_tmp * nb_a_tmp_tmp))) + (mb_a_tmp_tmp * ((2.0 * R2) * COS(q[2] - -0.52359877559829882)))) - (((SIN(q[2] - -0.52359877559829882) * R2) + M2) * ((2.0 * R2) * SIN(q[2] - -0.52359877559829882)))) * mb_a_tmp_tmp) / (EXPT(ob_a_tmp_0 + (xi_a * xi_a), 1.5) * 2.0))) - ((ri_a_tmp * id_a_tmp) / EXPT(ob_a_tmp_0 + (aj_a * aj_a), 1.5))) * (((id_a_tmp / SQRT(ob_a_tmp_0 + (mi_a * mi_a))) - (kj_a_tmp / (EXPT(ob_a_tmp_0 + (oi_a * oi_a), 1.5) * 2.0))) * (2.0 * I12[1]))) / ((ob_a_tmp_0 / (ob_a_tmp_0 + (dj_a * dj_a))) - 1.0))) - ((f_a * g_a_tmp_tmp) * nb_a_tmp_tmp)) - ((((((ri_a_tmp * ob_a_tmp_0) / (gj_a * gj_a)) - (((M1 - (COS(q[2] - -0.52359877559829882) * R2)) * ((2.0 * R2) * SIN(q[2] - -0.52359877559829882))) / (ob_a_tmp_0 + (jj_a * jj_a)))) * I12[1]) * (kj_a * kj_a)) / (lj_a * lj_a))) - (((ri_a_tmp * tb_a) * cc_a) / (nj_a * nj_a))) - (((ri_a_tmp * vb_a) * cc_a) / (ck_a * ck_a))) + ((((f_a * Mm_tmp_9) * ud_a_tmp) * g_a) / (ob_a_tmp_0 + (gk_a * gk_a)))) + ((((f_a * Mm_tmp_a) * ud_a_tmp) * g_a) / (ob_a_tmp_0 + (jk_a * jk_a)))) + ((((((dq_tmp * EXPT(R2, 3.0)) * m[10]) * hd_a_tmp) * nb_a_tmp_tmp) * mb_a_tmp_tmp) * Mm_tmp)) + ((((((dq_tmp * Mm_tmp_tmp_2) * m[10]) * hd_a_tmp) * ob_a_tmp_0) * ud_a_tmp) * yd_a_tmp_tmp)) + ((((dq_tmp_0 * Mm_tmp_9) * (nk_a * nk_a)) * ud_a_tmp) * yd_a_tmp_tmp)) + ((((dq_tmp_0 * Mm_tmp_a) * (pk_a * pk_a)) * ud_a_tmp) * yd_a_tmp_tmp)) + (((((((((Lc11 * Lc11) * 2.0) * EXPT(R2, 3.0)) * m[10]) * EXPT(n1, 6.0)) * g_a_tmp_tmp) * Mm_tmp_9) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2)) * Mm_tmp)) + (((((((((Lc11 * Lc11) * 2.0) * EXPT(R2, 3.0)) * m[10]) * EXPT(n1, 6.0)) * COS(q[2] - -0.52359877559829882)) * Mm_tmp_a) * ((SIN(q[2] - -0.52359877559829882) * R2) + M2)) * Mm_tmp)) * o_a) / 2.0) - (((((((L1 * L3) * SIN(q[1] - q[2])) * m[9]) - ((((L1 * L2) * m[3]) * SIN(q[1] - q[2])) / 2.0)) + (((L1 * LC3) * m[2]) * SIN(q[1] - q[2]))) + (((L1 * Lc15) * m[14]) * SIN(q[1] - q[2]))) * mc_a_tmp_tmp_0)) - ((((((((((((((k_a_tmp_tmp - (Mm_tmp_g / (vk_a * vk_a))) - ((ri_a_tmp * ((wk_a * wk_a) * I12[2])) / (bl_a * bl_a))) + dq_tmp_tmp_5) + dq_tmp_1) + dq_tmp_tmp_6) + dq_tmp_tmp_1) + (o_a_tmp / (ob_a_tmp_0 + (el_a * el_a)))) + (dq_tmp_tmp_7 / (ob_a_tmp_0 + (gl_a * gl_a)))) + ((Mm_tmp_b * (SQRT(ob_a_tmp_0 + (jl_a * jl_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (ll_a * ll_a)))) + ((Mm_tmp_c * (SQRT(ob_a_tmp_0 + (ol_a * ol_a)) + ob_a_tmp)) / SQRT(ob_a_tmp_0 + (ql_a * ql_a)))) + dq_tmp_tmp_8) + dq_tmp_tmp_2) * mb_a) / 2.0);
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+tmp[0] := 0.0;
+tmp[1] := (((((((((ic_a_tmp_1 * (-9806.65 * m[5])) - (((LC1 * COS(q[1])) + (LC1y * SIN(q[1]))) * (9806.65 * m[0]))) - (ic_a_tmp * (9806.65 * m[7]))) - (((L1 * 9806.65) * b_a) * m[9])) - (((L1 * 9806.65) * m[2]) * b_a)) - ((((L1 * 9806.65) * m[3]) * b_a) / 2.0)) - (((L1 * 9806.65) * m[13]) * b_a)) - (((L1 * 9806.65) * m[14]) * b_a)) - (((Lc13 * 9806.65) * m[12]) * b_a)) - ((((R1 * 9806.65) * m[6]) * p_a_tmp_tmp) / 2.0);
+tmp[2] := (((((((((ri_a_tmp * (((SIN(q[2] - -0.52359877559829882) * R2) + M2) * Lc11)) / (EXPT(ob_a_tmp_0 + (ul_a * ul_a), 1.5) * 2.0)) - (((Lc11 * R2) * g_a_tmp_tmp) / SQRT(ob_a_tmp_0 + (wl_a * wl_a)))) * (9806.65 * m[10])) + (((LC2 * COS(q[2])) - (LC2y * SIN(q[2]))) * (9806.65 * m[1]))) - (((L3 * 9806.65) * e_a_tmp_tmp_1) * m[9])) + (((L2 * 9806.65) * m[3]) * e_a_tmp_tmp_1)) - (((LC3 * 9806.65) * m[2]) * e_a_tmp_tmp_1)) - (((Lc15 * 9806.65) * m[14]) * e_a_tmp_tmp_1)) - (((R2 * 9806.65) * m[11]) * g_a_tmp_tmp);
+(* '<S1>:1:84' f1=(-R1*sin(theta2)-R1*cos(theta2)*tan(phi1))*10^(-3); *)
+b_a := COS(2.6179938779914944 - q[1]);
+temp1 := SIN(2.6179938779914944 - q[1]);
+temp2 := ASIN((K1 - (temp1 * R1)) / b_Le);
+f1 := ((( -R1) * a_0) - (TAN(temp2) * (R1 * b_a))) * 0.001;
+(* '<S1>:1:85' f2=(-R1*cos(theta2)-(R1*sin(theta2))/tan(phi2))*10^(-3); *)
+(* '<S1>:1:86' g3=(-R2*(M1*sin(theta3)-M2*cos(theta3))/n)*10^(-3); *)
+g3 := ((((M1 * a21) - (M2 * maxval)) * ( -R2)) / b_n) * 0.001;
+(* '<S1>:1:87' D=[1 0 0 0;0 f1 f2 0;0 0 0 g3]; *)
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+b_D[0] := 1.0;
+b_D[3] := 0.0;
+b_D[6] := 0.0;
+b_D[9] := 0.0;
+b_D[1] := 0.0;
+b_D[4] := f1;
+temp3 := COS(2.6179938779914944 - q[1]);
+temp4 := ACOS((K1 - (temp3 * R1)) / b_Le);
+b_D[7] := ((( -R1) * b_a) - ((SIN(2.6179938779914944 - q[1]) * R1) / TAN(temp4))) * 0.001;
+b_D[10] := 0.0;
+b_D[2] := 0.0;
+b_D[5] := 0.0;
+b_D[8] := 0.0;
+b_D[11] := g3;
+(* '<S1>:1:88' D1=D.'/(D*D.'); *)
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+
+FOR b_r1 := 0 TO 2 DO 
+    tau[b_r1] := ((((Mm[b_r1 + 6] * d2q[2]) + ((Mm[b_r1 + 3] * d2q[1]) + (Mm[b_r1] * d2q[0]))) + dq_0[b_r1]) + tmp[b_r1]) * 1.0E-6;
+    r3 := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r1), 2));
+    xl_A_tmp[r3] := b_D[b_r1];
+    xl_A_tmp[r3 + 1] := b_D[b_r1 + 3];
+    xl_A_tmp[r3 + 2] := b_D[b_r1 + 6];
+    xl_A_tmp[r3 + 3] := b_D[b_r1 + 9];
+
+    FOR b_r2 := 0 TO 2 DO 
+        rtemp := b_r2 + (3 * b_r1);
+        xl_A[rtemp] := 0.0;
+        xl_A[rtemp] := xl_A[rtemp] + (xl_A_tmp[r3] * b_D[b_r2]);
+        xl_A[rtemp] := (xl_A_tmp[r3 + 1] * b_D[b_r2 + 3]) + xl_A[rtemp];
+        xl_A[rtemp] := (xl_A_tmp[r3 + 2] * b_D[b_r2 + 6]) + xl_A[rtemp];
+        xl_A[rtemp] := (xl_A_tmp[r3 + 3] * b_D[b_r2 + 9]) + xl_A[rtemp];
+    END_FOR;
+
+END_FOR;
+
+b_r1 := 0;
+b_r2 := 1;
+r3 := 2;
+maxval := ABS(xl_A[0]);
+a21 := ABS(xl_A[1]);
+
+IF a21 > maxval THEN 
+    maxval := a21;
+    b_r1 := 1;
+    b_r2 := 0;
+END_IF;
+
+
+IF ABS(xl_A[2]) > maxval THEN 
+    b_r1 := 2;
+    b_r2 := 1;
+    r3 := 0;
+END_IF;
+
+xl_A[b_r2] := xl_A[b_r2] / xl_A[b_r1];
+xl_A[r3] := xl_A[r3] / xl_A[b_r1];
+xl_A[b_r2 + 3] := xl_A[b_r2 + 3] - (xl_A[b_r1 + 3] * xl_A[b_r2]);
+xl_A[r3 + 3] := xl_A[r3 + 3] - (xl_A[b_r1 + 3] * xl_A[r3]);
+xl_A[b_r2 + 6] := xl_A[b_r2 + 6] - (xl_A[b_r1 + 6] * xl_A[b_r2]);
+xl_A[r3 + 6] := xl_A[r3 + 6] - (xl_A[b_r1 + 6] * xl_A[r3]);
+
+IF ABS(xl_A[r3 + 3]) > ABS(xl_A[b_r2 + 3]) THEN 
+    rtemp := b_r2;
+    b_r2 := r3;
+    r3 := rtemp;
+END_IF;
+
+xl_A[r3 + 3] := xl_A[r3 + 3] / xl_A[b_r2 + 3];
+xl_A[r3 + 6] := xl_A[r3 + 6] - (xl_A[r3 + 3] * xl_A[b_r2 + 6]);
+rtemp := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r1), 2));
+b_D[rtemp] := xl_A_tmp[0] / xl_A[b_r1];
+D_tmp := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r2), 2));
+maxval := xl_A[b_r1 + 3];
+b_D[D_tmp] := xl_A_tmp[4] - (b_D[rtemp] * maxval);
+D_tmp_0 := DWORD_TO_DINT(SHL(DINT_TO_DWORD(r3), 2));
+a21 := xl_A[b_r1 + 6];
+b_D[D_tmp_0] := xl_A_tmp[8] - (b_D[rtemp] * a21);
+b_a := xl_A[b_r2 + 3];
+b_D[D_tmp] := b_D[D_tmp] / b_a;
+a_0 := xl_A[b_r2 + 6];
+b_D[D_tmp_0] := b_D[D_tmp_0] - (b_D[D_tmp] * a_0);
+cph1_tmp_tmp := xl_A[r3 + 6];
+b_D[D_tmp_0] := b_D[D_tmp_0] / cph1_tmp_tmp;
+e_a_tmp_tmp := xl_A[r3 + 3];
+b_D[D_tmp] := b_D[D_tmp] - (b_D[D_tmp_0] * e_a_tmp_tmp);
+b_D[rtemp] := b_D[rtemp] - (b_D[D_tmp_0] * xl_A[r3]);
+b_D[rtemp] := b_D[rtemp] - (b_D[D_tmp] * xl_A[b_r2]);
+b_D[rtemp + 1] := xl_A_tmp[1] / xl_A[b_r1];
+b_D[D_tmp + 1] := xl_A_tmp[5] - (b_D[rtemp + 1] * maxval);
+b_D[D_tmp_0 + 1] := xl_A_tmp[9] - (b_D[rtemp + 1] * a21);
+b_D[D_tmp + 1] := b_D[D_tmp + 1] / b_a;
+b_D[D_tmp_0 + 1] := b_D[D_tmp_0 + 1] - (b_D[D_tmp + 1] * a_0);
+b_D[D_tmp_0 + 1] := b_D[D_tmp_0 + 1] / cph1_tmp_tmp;
+b_D[D_tmp + 1] := b_D[D_tmp + 1] - (b_D[D_tmp_0 + 1] * e_a_tmp_tmp);
+b_D[rtemp + 1] := b_D[rtemp + 1] - (b_D[D_tmp_0 + 1] * xl_A[r3]);
+b_D[rtemp + 1] := b_D[rtemp + 1] - (b_D[D_tmp + 1] * xl_A[b_r2]);
+b_D[rtemp + 2] := xl_A_tmp[2] / xl_A[b_r1];
+b_D[D_tmp + 2] := xl_A_tmp[6] - (b_D[rtemp + 2] * maxval);
+b_D[D_tmp_0 + 2] := xl_A_tmp[10] - (b_D[rtemp + 2] * a21);
+b_D[D_tmp + 2] := b_D[D_tmp + 2] / b_a;
+b_D[D_tmp_0 + 2] := b_D[D_tmp_0 + 2] - (b_D[D_tmp + 2] * a_0);
+b_D[D_tmp_0 + 2] := b_D[D_tmp_0 + 2] / cph1_tmp_tmp;
+b_D[D_tmp + 2] := b_D[D_tmp + 2] - (b_D[D_tmp_0 + 2] * e_a_tmp_tmp);
+b_D[rtemp + 2] := b_D[rtemp + 2] - (b_D[D_tmp_0 + 2] * xl_A[r3]);
+b_D[rtemp + 2] := b_D[rtemp + 2] - (b_D[D_tmp + 2] * xl_A[b_r2]);
+b_D[rtemp + 3] := xl_A_tmp[3] / xl_A[b_r1];
+b_D[D_tmp + 3] := xl_A_tmp[7] - (b_D[rtemp + 3] * maxval);
+b_D[D_tmp_0 + 3] := xl_A_tmp[11] - (b_D[rtemp + 3] * a21);
+b_D[D_tmp + 3] := b_D[D_tmp + 3] / b_a;
+b_D[D_tmp_0 + 3] := b_D[D_tmp_0 + 3] - (b_D[D_tmp + 3] * a_0);
+b_D[D_tmp_0 + 3] := b_D[D_tmp_0 + 3] / cph1_tmp_tmp;
+b_D[D_tmp + 3] := b_D[D_tmp + 3] - (b_D[D_tmp_0 + 3] * e_a_tmp_tmp);
+b_D[rtemp + 3] := b_D[rtemp + 3] - (b_D[D_tmp_0 + 3] * xl_A[r3]);
+b_D[rtemp + 3] := b_D[rtemp + 3] - (b_D[D_tmp + 3] * xl_A[b_r2]);
+(* '<S1>:1:89' D01=[1 0 0 ;0 f1 0;0 0 g3]; *)
+(* '<S1>:1:90' D02=[1 0 0 ;0 f2 0;0 0 g3]; *)
+(* '<S1>:1:91' tau_drive=D1*tau; *)
+(* '<S1>:1:92' tau_drive1=inv(D01)*tau; *)
+(* '<S1>:1:92' tau_drive2=inv(D02)*tau; *)
+(* '<S1>:1:93' f21_single=tau_drive1(2); *)
+(* '<S1>:1:93' f22_single=tau_drive2(2); *)
+(* '<S1>:1:96' adaptive_rate=Mm*(diag(Wn)).'*(diag(Wn))*Z2; *)
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+
+FOR b_r1 := 0 TO 8 DO 
+    xl_A[b_r1] := 0.0;
+END_FOR;
+
+xl_A[0] := Wn[0];
+xl_A[4] := Wn[1];
+xl_A[8] := Wn[2];
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+
+FOR b_r1 := 0 TO 8 DO 
+    b[b_r1] := 0.0;
+END_FOR;
+
+b[0] := Wn[0];
+b[4] := Wn[1];
+b[8] := Wn[2];
+
+FOR b_r1 := 0 TO 3 DO 
+    (* Outport: '<Root>/tau_drive' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function1' *)
+    tau_drive[b_r1] := (b_D[b_r1 + 8] * tau[2]) + ((b_D[b_r1 + 4] * tau[1]) + (b_D[b_r1] * tau[0]));
+END_FOR;
+
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+e[0] := 1.0;
+e[3] := 0.0;
+e[6] := 0.0;
+e[1] := 0.0;
+e[4] := f1;
+e[7] := 0.0;
+e[2] := 0.0;
+e[5] := 0.0;
+e[8] := g3;
+i0_inv(x := e);
+Mm_0 := i0_inv.y;
+(* MATLAB Function: '<Root>/MATLAB Function1' *)
+
+FOR b_r1 := 0 TO 2 DO 
+    tmp[b_r1] := (Mm_0[b_r1 + 6] * tau[2]) + ((Mm_0[b_r1 + 3] * tau[1]) + (Mm_0[b_r1] * tau[0]));
+END_FOR;
+
+(* Outport: '<Root>/f21_single' incorporates:
+ *  MATLAB Function: '<Root>/MATLAB Function1' *)
+f21_single := tmp[1];
+
+FOR b_r1 := 0 TO 2 DO 
+    (* MATLAB Function: '<Root>/MATLAB Function1' *)
+
+    FOR b_r2 := 0 TO 2 DO 
+        r3 := b_r1 + (3 * b_r2);
+        e[r3] := 0.0;
+        e[r3] := e[r3] + (Mm[b_r1] * xl_A[b_r2]);
+        e[r3] := e[r3] + (Mm[b_r1 + 3] * xl_A[b_r2 + 3]);
+        e[r3] := e[r3] + (Mm[b_r1 + 6] * xl_A[b_r2 + 6]);
+    END_FOR;
+
+    dq_0[b_r1] := 0.0;
+
+    FOR b_r2 := 0 TO 2 DO 
+        r3 := b_r1 + (3 * b_r2);
+        Mm_0[r3] := 0.0;
+        Mm_0[r3] := Mm_0[r3] + (b[3 * b_r2] * e[b_r1]);
+        Mm_0[r3] := (b[(3 * b_r2) + 1] * e[b_r1 + 3]) + Mm_0[r3];
+        Mm_0[r3] := (b[(3 * b_r2) + 2] * e[b_r1 + 6]) + Mm_0[r3];
+        dq_0[b_r1] := (Mm_0[r3] * Z2[b_r2]) + dq_0[b_r1];
+    END_FOR;
+
+    (* Outport: '<Root>/adaptive_rate' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function1' *)
+    adaptive_rate[b_r1] := dq_0[b_r1];
+END_FOR;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Dyna1">
+      <LineId Id="3" Count="643" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

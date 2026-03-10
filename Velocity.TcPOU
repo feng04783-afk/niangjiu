@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="Velocity" Id="{dc79bcf7-9fe7-4ddc-9f28-849757079fe8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Velocity
+VAR_INPUT
+	q: ARRAY[0..2] OF LREAL;
+	V: ARRAY[0..2] OF LREAL;
+	
+END_VAR
+VAR_OUTPUT
+	dq_t: ARRAY[0..3] OF LREAL;	
+	dq: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR
+	a_tmp: LREAL;
+	b_a_tmp: LREAL;
+	rtb_dq_tmp: LREAL;
+	rtb_dq_tmp_0: LREAL;
+	rtb_dq_tmp_1: LREAL;
+	rtb_dq_tmp_2: LREAL;
+	b_a_tmp_0: ARRAY[0..8] OF LREAL;
+	i: DINT;
+	b_a_tmp_tmp: LREAL;
+	b_a_tmp_tmp_0: LREAL;
+	b_a_tmp_tmp_1: LREAL;
+	b_a_tmp_tmp_tmp: LREAL;
+	b_a_tmp_tmp_2: LREAL;
+	b_a_tmp_tmp_3: LREAL;
+	dq1,dt1,dt2,dt3: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* MATLAB Function: '<Root>/Velocity' *)
+(* L1=2400;L3=2200;S1=557; *)
+(* MATLAB Function 'Velocity': '<S1>:1' *)
+(* '<S1>:1:3' x_dot=v(1); *)
+(* '<S1>:1:3' y_dot=v(2); *)
+(* '<S1>:1:3' z_dot=v(3); *)
+(* '<S1>:1:4' coder.extrinsic('evalin'); *)
+(* L1=0;L3=0;S1=0;R1=0;R2=0;Le=0;K1=0;K2=0;M1=0;M2=0; *)
+(* L1=evalin('base','L1');L3=evalin('base','L3');S1=evalin('base','S1');R1=evalin('base','R1');Le=evalin('base','Le');R2=evalin('base','R2'); *)
+(* K1=evalin('base','K1');K2=evalin('base','K2');M1=evalin('base','M1');M2=evalin('base','M2'); *)
+(* K2=K1; *)
+(* '<S1>:1:9' theta1=q(1); *)
+(* '<S1>:1:9' theta4=q(2); *)
+(* '<S1>:1:9' theta5=q(3); *)
+(* '<S1>:1:10' theta7=-pi/6; *)
+(* jacobian=[-sin(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*cos(theta1)*sin(theta4) -L3*cos(theta1)*sin(theta5) ; *)
+(* cos(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*sin(theta1)*sin(theta4) -L3*sin(theta1)*sin(theta5) ; *)
+(* 0 L1*cos(theta4) L3*cos(theta5) ]; *)
+
+(* dq=inv(jacobian)*[x_dot y_dot z_dot].'; *)
+(* '<S1>:1:18' inv_jacobian=[-sin(theta1)/(L1*cos(theta1)^2*cos(theta4) - S1*sin(theta1)^2 - S1*cos(theta1)^2 + L3*cos(theta1)^2*cos(theta5) + L1*cos(theta4)*sin(theta1)^2 + L3*cos(theta5)*sin(theta1)^2), cos(theta1)/(L1*cos(theta1)^2*cos(theta4) - S1*sin(theta1)^2 - S1*cos(theta1)^2 + L3*cos(theta1)^2*cos(theta5) + L1*cos(theta4)*sin(theta1)^2 + L3*cos(theta5)*sin(theta1)^2), 0;  *)
+(* '<S1>:1:19'     (cos(theta1)*cos(theta5))/(L1*cos(theta1)^2*cos(theta4)*sin(theta5) - L1*cos(theta1)^2*cos(theta5)*sin(theta4) + L1*cos(theta4)*sin(theta1)^2*sin(theta5) - L1*cos(theta5)*sin(theta1)^2*sin(theta4)), (cos(theta5)*sin(theta1))/(L1*cos(theta1)^2*cos(theta4)*sin(theta5) - L1*cos(theta1)^2*cos(theta5)*sin(theta4) + L1*cos(theta4)*sin(theta1)^2*sin(theta5) - L1*cos(theta5)*sin(theta1)^2*sin(theta4)), sin(theta5)/(L1*cos(theta4)*sin(theta5) - L1*cos(theta5)*sin(theta4));  *)
+(* '<S1>:1:20'     -(cos(theta1)*cos(theta4))/(L3*cos(theta1)^2*cos(theta4)*sin(theta5) - L3*cos(theta1)^2*cos(theta5)*sin(theta4) + L3*cos(theta4)*sin(theta1)^2*sin(theta5) - L3*cos(theta5)*sin(theta1)^2*sin(theta4)), -(cos(theta4)*sin(theta1))/(L3*cos(theta1)^2*cos(theta4)*sin(theta5) - L3*cos(theta1)^2*cos(theta5)*sin(theta4) + L3*cos(theta4)*sin(theta1)^2*sin(theta5) - L3*cos(theta5)*sin(theta1)^2*sin(theta4)), -sin(theta4)/(L3*cos(theta4)*sin(theta5) - L3*cos(theta5)*sin(theta4))]; *)
+a_tmp := COS(q[0]);
+b_a_tmp := SIN(q[0]);
+(* '<S1>:1:21' dq=inv_jacobian*[x_dot y_dot z_dot].'; *)
+rtb_dq_tmp := COS(q[1]);
+rtb_dq_tmp_0 := COS(q[2]);
+rtb_dq_tmp_1 := SIN(q[2]);
+rtb_dq_tmp_2 := SIN(q[1]);
+(* MATLAB Function: '<Root>/Velocity' incorporates:
+ *  Inport: '<Root>/v' *)
+b_a_tmp_tmp := a_tmp * a_tmp;
+b_a_tmp_tmp_0 := b_a_tmp * b_a_tmp;
+b_a_tmp_tmp_tmp := b_a_tmp_tmp * L1;
+b_a_tmp_tmp_1 := b_a_tmp_tmp_tmp * rtb_dq_tmp;
+b_a_tmp_tmp_2 := b_a_tmp_tmp * L3;
+b_a_tmp_tmp_3 := b_a_tmp_tmp_2 * rtb_dq_tmp_0;
+b_a_tmp_0[0] := ( -b_a_tmp) / (((((b_a_tmp_tmp_1 - (b_a_tmp_tmp_0 * S1)) - (b_a_tmp_tmp * S1)) + b_a_tmp_tmp_3) + ((L1 * rtb_dq_tmp) * b_a_tmp_tmp_0)) + ((L3 * rtb_dq_tmp_0) * b_a_tmp_tmp_0));
+b_a_tmp_0[3] := a_tmp / ((((((((a_tmp * a_tmp) * L1) * rtb_dq_tmp) - ((b_a_tmp * b_a_tmp) * S1)) - ((a_tmp * a_tmp) * S1)) + (((a_tmp * a_tmp) * L3) * rtb_dq_tmp_0)) + ((L1 * COS(q[1])) * (b_a_tmp * b_a_tmp))) + ((L3 * COS(q[2])) * (b_a_tmp * b_a_tmp)));
+b_a_tmp_0[6] := 0.0;
+b_a_tmp_0[1] := (a_tmp * rtb_dq_tmp_0) / ((((b_a_tmp_tmp_1 * rtb_dq_tmp_1) - ((b_a_tmp_tmp_tmp * rtb_dq_tmp_0) * rtb_dq_tmp_2)) + (((L1 * COS(q[1])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_1)) - (((L1 * rtb_dq_tmp_0) * b_a_tmp_tmp_0) * rtb_dq_tmp_2));
+b_a_tmp_0[4] := (rtb_dq_tmp_0 * b_a_tmp) / (((((((a_tmp * a_tmp) * L1) * rtb_dq_tmp) * rtb_dq_tmp_1) - ((((a_tmp * a_tmp) * L1) * rtb_dq_tmp_0) * rtb_dq_tmp_2)) + (((L1 * COS(q[1])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_1)) - (((L1 * COS(q[2])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_2));
+b_a_tmp_0[7] := rtb_dq_tmp_1 / (((L1 * COS(q[1])) * rtb_dq_tmp_1) - ((L1 * COS(q[2])) * rtb_dq_tmp_2));
+b_a_tmp_0[2] := ( -(a_tmp * rtb_dq_tmp)) / (((((b_a_tmp_tmp_2 * rtb_dq_tmp) * rtb_dq_tmp_1) - (b_a_tmp_tmp_3 * rtb_dq_tmp_2)) + (((L3 * rtb_dq_tmp) * b_a_tmp_tmp_0) * rtb_dq_tmp_1)) - (((L3 * COS(q[2])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_2));
+b_a_tmp_0[5] := ( -(rtb_dq_tmp * b_a_tmp)) / (((((((a_tmp * a_tmp) * L3) * rtb_dq_tmp) * rtb_dq_tmp_1) - ((((a_tmp * a_tmp) * L3) * rtb_dq_tmp_0) * rtb_dq_tmp_2)) + (((L3 * COS(q[1])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_1)) - (((L3 * COS(q[2])) * (b_a_tmp * b_a_tmp)) * rtb_dq_tmp_2));
+b_a_tmp_0[8] := ( -rtb_dq_tmp_2) / (((L3 * COS(q[1])) * rtb_dq_tmp_1) - ((L3 * COS(q[2])) * rtb_dq_tmp_2));
+a_tmp := V[0];
+b_a_tmp := V[1];
+rtb_dq_tmp := V[2];
+(* MATLAB Function: '<Root>/Velocity' *)
+
+FOR i := 0 TO 2 DO 
+    dq[i] := (b_a_tmp_0[i + 6] * rtb_dq_tmp) + ((b_a_tmp_0[i + 3] * b_a_tmp) + (b_a_tmp_0[i] * a_tmp));
+END_FOR;
+
+(* '<S1>:1:22' dq1=dq(1); *)
+(* '<S1>:1:23' dq4=dq(2); *)
+(* '<S1>:1:24' dq5=dq(3); *)
+(* '<S1>:1:25' theta2=5*pi/6-theta4; *)
+(* '<S1>:1:25' theta3=theta7-theta5; *)
+(* '<S1>:1:26' n=sqrt((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2); *)
+a_tmp := COS(-0.52359877559829882 - q[2]);
+b_a_tmp := M1 - (R2 * a_tmp);
+rtb_dq_tmp := SIN(-0.52359877559829882 - q[2]);
+rtb_dq_tmp_0 := M2 - (R2 * rtb_dq_tmp);
+(* '<S1>:1:27' J1=-(R1*sin(theta2)+(R1*(K1-R1*sin(theta2))*cos(theta2))/sqrt(Le^2-(K1-R1*sin(theta2))^2)); *)
+rtb_dq_tmp_1 := SIN(2.6179938779914944 - q[1]);
+b_a_tmp_tmp_0 := K1 - (R1 * rtb_dq_tmp_1);
+(* '<S1>:1:28' J2=(R1*cos(theta2)+(R1*(K2-R1*cos(theta2))*sin(theta2))/sqrt(Le^2-(K2-R1*cos(theta2))^2)); *)
+b_a_tmp_tmp_tmp := COS(2.6179938779914944 - q[1]);
+rtb_dq_tmp_2 := K2 - (R1 * b_a_tmp_tmp_tmp);
+(* Outport: '<Root>/dq1' incorporates:
+ *  MATLAB Function: '<Root>/Velocity' *)
+(* '<S1>:1:29' J3=(R2*(M2*cos(theta3) - M1*sin(theta3)))/n; *)
+(* '<S1>:1:30' dt1=J1*dq4; *)
+(* '<S1>:1:31' dt2=J2*dq4; *)
+(* '<S1>:1:32' dt3=J3*dq5; *)
+dq1 := dq[0];
+(* MATLAB Function: '<Root>/Velocity' *)
+b_a_tmp_tmp := b_Le * b_Le;
+(* Outport: '<Root>/dt1' incorporates:
+ *  MATLAB Function: '<Root>/Velocity' *)
+dt1 := ( -(((((K1 - (SIN(2.6179938779914944 - q[1]) * R1)) * R1) * b_a_tmp_tmp_tmp) / SQRT(b_a_tmp_tmp - (b_a_tmp_tmp_0 * b_a_tmp_tmp_0))) + (SIN(2.6179938779914944 - q[1]) * R1))) * dq[1];
+(* Outport: '<Root>/dt2' incorporates:
+ *  MATLAB Function: '<Root>/Velocity' *)
+dt2 := (((((K2 - (COS(2.6179938779914944 - q[1]) * R1)) * R1) * rtb_dq_tmp_1) / SQRT(b_a_tmp_tmp - (rtb_dq_tmp_2 * rtb_dq_tmp_2))) + (COS(2.6179938779914944 - q[1]) * R1)) * dq[1];
+(* Outport: '<Root>/dt3' incorporates:
+ *  MATLAB Function: '<Root>/Velocity' *)
+dt3 := ((((M2 * a_tmp) - (M1 * rtb_dq_tmp)) * R2) / SQRT((b_a_tmp * b_a_tmp) + (rtb_dq_tmp_0 * rtb_dq_tmp_0))) * dq[2];
+
+dq_t[0]:=dq1;
+dq_t[1]:=dt2;
+dq_t[2]:=dt3;
+dq_t[3]:=dt1;]]></ST>
+    </Implementation>
+    <LineIds Name="Velocity">
+      <LineId Id="3" Count="91" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="155" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

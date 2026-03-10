@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="polynomial_v" Id="{9e152b1b-0b51-454c-8400-787dba68b211}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK polynomial_v
+VAR_INPUT
+	t: LREAL;
+	t1: LREAL;
+	S0: LREAL;
+	v0: LREAL;
+	a0: LREAL;
+	S1: LREAL;
+	v1: LREAL;
+	a1: LREAL;
+END_VAR
+VAR_OUTPUT
+	b_S: LREAL;
+	v: LREAL;
+	a: LREAL;
+END_VAR
+VAR
+	S_tmp: LREAL;
+	S_tmp_0: LREAL;
+	S_tmp_1: LREAL;
+	S_tmp_2: LREAL;
+	S_tmp_3: LREAL;
+	S_tmp_4: LREAL;
+	S_tmp_5: LREAL;
+	S_tmp_6: LREAL;
+	S_tmp_7: LREAL;
+	S_tmp_8: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* 'polynomial_v:2' S=S0 + t.*v0 + (a0.*t.^2)/2 - (t.^5.*(12*S0 - 12*S1 + 6*t1*v0 + 6*t1*v1 + a0*t1^2 - a1*t1^2))/(2*t1^5) - (t.^3.*(20*S0 - 20*S1 + 12*t1*v0 + 8*t1*v1 + 3*a0*t1^2 - a1*t1^2))/(2*t1^3) + (t.^4.*(30*S0 - 30*S1 + 16*t1*v0 + 14*t1*v1 + 3*a0*t1^2 - 2*a1*t1^2))/(2*t1^4); *)
+S_tmp := EXPT(t, 4.0);
+S_tmp_0 := EXPT(t, 3.0);
+S_tmp_1 := EXPT(t1, 4.0);
+S_tmp_2 := EXPT(t1, 3.0);
+S_tmp_3 := EXPT(t1, 5.0);
+S_tmp_4 := t1 * t1;
+S_tmp_5 := S_tmp_4 * a1;
+S_tmp_6 := (3.0 * a0) * S_tmp_4;
+S_tmp_7 := (((((12.0 * S0) - (12.0 * S1)) + ((6.0 * t1) * v0)) + ((6.0 * t1) * v1)) + (S_tmp_4 * a0)) - S_tmp_5;
+S_tmp_8 := t * t;
+S_tmp_5 := (((((20.0 * S0) - (20.0 * S1)) + ((12.0 * t1) * v0)) + ((8.0 * t1) * v1)) + S_tmp_6) - S_tmp_5;
+S_tmp_4 := (((((30.0 * S0) - (30.0 * S1)) + ((16.0 * t1) * v0)) + ((14.0 * t1) * v1)) + S_tmp_6) - ((2.0 * a1) * S_tmp_4);
+b_S := (((((S_tmp_8 * a0) / 2.0) + ((t * v0) + S0)) - ((S_tmp_7 * EXPT(t, 5.0)) / (2.0 * S_tmp_3))) - ((S_tmp_5 * S_tmp_0) / (2.0 * S_tmp_2))) + ((S_tmp_4 * S_tmp) / (2.0 * S_tmp_1));
+(* 'polynomial_v:3' v=v0 + a0*t - (5*t^4*(12*S0 - 12*S1 + 6*t1*v0 + 6*t1*v1 + a0*t1^2 - a1*t1^2))/(2*t1^5) - (3*t^2*(20*S0 - 20*S1 + 12*t1*v0 + 8*t1*v1 + 3*a0*t1^2 - a1*t1^2))/(2*t1^3) + (2*t^3*(30*S0 - 30*S1 + 16*t1*v0 + 14*t1*v1 + 3*a0*t1^2 - 2*a1*t1^2))/t1^4; *)
+v := ((((a0 * t) + v0) - ((S_tmp_7 * (5.0 * S_tmp)) / (2.0 * EXPT(t1, 5.0)))) - ((S_tmp_5 * (S_tmp_8 * 3.0)) / (2.0 * EXPT(t1, 3.0)))) + ((S_tmp_4 * (2.0 * S_tmp_0)) / S_tmp_1);
+(* 'polynomial_v:4' a=a0 - (3*t*(20*S0 - 20*S1 + 12*t1*v0 + 8*t1*v1 + 3*a0*t1^2 - a1*t1^2))/t1^3 - (10*t^3*(12*S0 - 12*S1 + 6*t1*v0 + 6*t1*v1 + a0*t1^2 - a1*t1^2))/t1^5 + (6*t^2*(30*S0 - 30*S1 + 16*t1*v0 + 14*t1*v1 + 3*a0*t1^2 - 2*a1*t1^2))/t1^4; *)
+a := ((a0 - ((S_tmp_5 * (3.0 * t)) / S_tmp_2)) - ((S_tmp_7 * (10.0 * S_tmp_0)) / S_tmp_3)) + ((S_tmp_4 * (S_tmp_8 * 6.0)) / S_tmp_1);
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="polynomial_v">
+      <LineId Id="38" Count="19" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

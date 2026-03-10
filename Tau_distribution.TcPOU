@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="Tau_distribution" Id="{4ba96d47-cf7b-4ea3-8803-832d29bc913b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Tau_distribution
+VAR_INPUT
+	tau: ARRAY[0..2] OF LREAL;
+	q: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR_OUTPUT
+	tau_drive_single1: ARRAY[0..2] OF LREAL;
+	tau_drive_single2: ARRAY[0..2] OF LREAL;
+	tau_drive: ARRAY[0..3] OF LREAL;
+END_VAR
+VAR
+	f1: LREAL;
+	f2: LREAL;
+	g3: LREAL;
+	b_D: ARRAY[0..11] OF LREAL;
+	b_a: LREAL;
+	c_A: ARRAY[0..8] OF LREAL;
+	b_r1: DINT;
+	b_r2: DINT;
+	r3: DINT;
+	maxval: LREAL;
+	a21: LREAL;
+	rtemp: DINT;
+	f1_tmp: LREAL;
+	f1_tmp_0: LREAL;
+	b_a_tmp: LREAL;
+	c_A_tmp: ARRAY[0..11] OF LREAL;
+	tmp: ARRAY[0..8] OF LREAL;
+	D_tmp: DINT;
+	D_tmp_0: DINT;
+	temp1: LREAL;
+	temp2: LREAL;
+	temp3: LREAL;
+	i0_inv: inv;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* MATLAB Function: '<Root>/MATLAB Function3' *)
+(* MATLAB Function 'MATLAB Function3': '<S1>:1' *)
+(* '<S1>:1:2' theta6=5*pi/6; *)
+(* '<S1>:1:2' theta7=-pi/6; *)
+(* '<S1>:1:3' theta4=q(2); *)
+(* '<S1>:1:3' theta5=q(3); *)
+(* '<S1>:1:4' theta2=theta6-theta4; *)
+(* '<S1>:1:4' theta3=theta7-theta5; *)
+(* '<S1>:1:5' phi1=asin((K1-R1*sin(theta2))/L7); *)
+(* '<S1>:1:6' phi2=acos((K2-R1*cos(theta2))/L8); *)
+(* '<S1>:1:8' n=sqrt((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2); *)
+maxval := COS(-0.52359877559829882 - q[2]);
+a21 := M1 - (R2 * maxval);
+b_a_tmp := SIN(-0.52359877559829882 - q[2]);
+b_a := M2 - (R2 * b_a_tmp);
+(* '<S1>:1:9' f1=(-R1*sin(theta2)-R1*cos(theta2)*tan(phi1))*10^(-3); *)
+f1_tmp := SIN(2.6179938779914944 - q[1]);
+f1_tmp_0 := COS(2.6179938779914944 - q[1]);
+temp1 := ASIN((K1 - (R1 * f1_tmp)) / L7);
+f1 := ((( -R1) * f1_tmp) - (TAN(temp1) * (R1 * f1_tmp_0))) * 0.001;
+(* '<S1>:1:10' f2=(-R1*cos(theta2)-(R1*sin(theta2))/tan(phi2))*10^(-3); *)
+temp2 := COS(2.6179938779914944 - q[1]);
+temp3 := ACOS((K2 - (temp2 * R1)) / L8);
+f2 := -((( -R1) * f1_tmp_0) - ((SIN(2.6179938779914944 - q[1]) * R1) / TAN(temp3))) * 0.001;
+(* '<S1>:1:11' g3=(-R2*(M1*sin(theta3)-M2*cos(theta3))/n)*10^(-3); *)
+g3 := ((((M1 * b_a_tmp) - (M2 * maxval)) * ( -R2)) / SQRT((a21 * a21) + (b_a * b_a))) * 0.001;
+(* '<S1>:1:12' D=[1 0 0 0;0 f1 f2 0;0 0 0 g3]; *)
+(* MATLAB Function: '<Root>/MATLAB Function3' *)
+b_D[0] := 1.0;
+b_D[3] := 0.0;
+b_D[6] := 0.0;
+b_D[9] := 0.0;
+b_D[1] := 0.0;
+b_D[4] := f1;
+b_D[7] := f2;
+b_D[10] := 0.0;
+b_D[2] := 0.0;
+b_D[5] := 0.0;
+b_D[8] := 0.0;
+b_D[11] := g3;
+(* '<S1>:1:13' D1=D.'/(D*D.'); *)
+(* MATLAB Function: '<Root>/MATLAB Function3' *)
+
+FOR b_r1 := 0 TO 2 DO 
+    b_r2 := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r1), 2));
+    c_A_tmp[b_r2] := b_D[b_r1];
+    c_A_tmp[b_r2 + 1] := b_D[b_r1 + 3];
+    c_A_tmp[b_r2 + 2] := b_D[b_r1 + 6];
+    c_A_tmp[b_r2 + 3] := b_D[b_r1 + 9];
+
+    FOR r3 := 0 TO 2 DO 
+        rtemp := r3 + (3 * b_r1);
+        c_A[rtemp] := 0.0;
+        c_A[rtemp] := c_A[rtemp] + (c_A_tmp[b_r2] * b_D[r3]);
+        c_A[rtemp] := (c_A_tmp[b_r2 + 1] * b_D[r3 + 3]) + c_A[rtemp];
+        c_A[rtemp] := (c_A_tmp[b_r2 + 2] * b_D[r3 + 6]) + c_A[rtemp];
+        c_A[rtemp] := (c_A_tmp[b_r2 + 3] * b_D[r3 + 9]) + c_A[rtemp];
+    END_FOR;
+
+END_FOR;
+
+b_r1 := 0;
+b_r2 := 1;
+r3 := 2;
+maxval := ABS(c_A[0]);
+a21 := ABS(c_A[1]);
+
+IF a21 > maxval THEN 
+    maxval := a21;
+    b_r1 := 1;
+    b_r2 := 0;
+END_IF;
+
+
+IF ABS(c_A[2]) > maxval THEN 
+    b_r1 := 2;
+    b_r2 := 1;
+    r3 := 0;
+END_IF;
+
+c_A[b_r2] := c_A[b_r2] / c_A[b_r1];
+c_A[r3] := c_A[r3] / c_A[b_r1];
+c_A[b_r2 + 3] := c_A[b_r2 + 3] - (c_A[b_r1 + 3] * c_A[b_r2]);
+c_A[r3 + 3] := c_A[r3 + 3] - (c_A[b_r1 + 3] * c_A[r3]);
+c_A[b_r2 + 6] := c_A[b_r2 + 6] - (c_A[b_r1 + 6] * c_A[b_r2]);
+c_A[r3 + 6] := c_A[r3 + 6] - (c_A[b_r1 + 6] * c_A[r3]);
+
+IF ABS(c_A[r3 + 3]) > ABS(c_A[b_r2 + 3]) THEN 
+    rtemp := b_r2;
+    b_r2 := r3;
+    r3 := rtemp;
+END_IF;
+
+c_A[r3 + 3] := c_A[r3 + 3] / c_A[b_r2 + 3];
+c_A[r3 + 6] := c_A[r3 + 6] - (c_A[r3 + 3] * c_A[b_r2 + 6]);
+rtemp := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r1), 2));
+b_D[rtemp] := c_A_tmp[0] / c_A[b_r1];
+D_tmp := DWORD_TO_DINT(SHL(DINT_TO_DWORD(b_r2), 2));
+maxval := c_A[b_r1 + 3];
+b_D[D_tmp] := c_A_tmp[4] - (b_D[rtemp] * maxval);
+D_tmp_0 := DWORD_TO_DINT(SHL(DINT_TO_DWORD(r3), 2));
+a21 := c_A[b_r1 + 6];
+b_D[D_tmp_0] := c_A_tmp[8] - (b_D[rtemp] * a21);
+b_a_tmp := c_A[b_r2 + 3];
+b_D[D_tmp] := b_D[D_tmp] / b_a_tmp;
+b_a := c_A[b_r2 + 6];
+b_D[D_tmp_0] := b_D[D_tmp_0] - (b_D[D_tmp] * b_a);
+f1_tmp_0 := c_A[r3 + 6];
+b_D[D_tmp_0] := b_D[D_tmp_0] / f1_tmp_0;
+f1_tmp := c_A[r3 + 3];
+b_D[D_tmp] := b_D[D_tmp] - (b_D[D_tmp_0] * f1_tmp);
+b_D[rtemp] := b_D[rtemp] - (b_D[D_tmp_0] * c_A[r3]);
+b_D[rtemp] := b_D[rtemp] - (b_D[D_tmp] * c_A[b_r2]);
+b_D[rtemp + 1] := c_A_tmp[1] / c_A[b_r1];
+b_D[D_tmp + 1] := c_A_tmp[5] - (b_D[rtemp + 1] * maxval);
+b_D[D_tmp_0 + 1] := c_A_tmp[9] - (b_D[rtemp + 1] * a21);
+b_D[D_tmp + 1] := b_D[D_tmp + 1] / b_a_tmp;
+b_D[D_tmp_0 + 1] := b_D[D_tmp_0 + 1] - (b_D[D_tmp + 1] * b_a);
+b_D[D_tmp_0 + 1] := b_D[D_tmp_0 + 1] / f1_tmp_0;
+b_D[D_tmp + 1] := b_D[D_tmp + 1] - (b_D[D_tmp_0 + 1] * f1_tmp);
+b_D[rtemp + 1] := b_D[rtemp + 1] - (b_D[D_tmp_0 + 1] * c_A[r3]);
+b_D[rtemp + 1] := b_D[rtemp + 1] - (b_D[D_tmp + 1] * c_A[b_r2]);
+b_D[rtemp + 2] := c_A_tmp[2] / c_A[b_r1];
+b_D[D_tmp + 2] := c_A_tmp[6] - (b_D[rtemp + 2] * maxval);
+b_D[D_tmp_0 + 2] := c_A_tmp[10] - (b_D[rtemp + 2] * a21);
+b_D[D_tmp + 2] := b_D[D_tmp + 2] / b_a_tmp;
+b_D[D_tmp_0 + 2] := b_D[D_tmp_0 + 2] - (b_D[D_tmp + 2] * b_a);
+b_D[D_tmp_0 + 2] := b_D[D_tmp_0 + 2] / f1_tmp_0;
+b_D[D_tmp + 2] := b_D[D_tmp + 2] - (b_D[D_tmp_0 + 2] * f1_tmp);
+b_D[rtemp + 2] := b_D[rtemp + 2] - (b_D[D_tmp_0 + 2] * c_A[r3]);
+b_D[rtemp + 2] := b_D[rtemp + 2] - (b_D[D_tmp + 2] * c_A[b_r2]);
+b_D[rtemp + 3] := c_A_tmp[3] / c_A[b_r1];
+b_D[D_tmp + 3] := c_A_tmp[7] - (b_D[rtemp + 3] * maxval);
+b_D[D_tmp_0 + 3] := c_A_tmp[11] - (b_D[rtemp + 3] * a21);
+b_D[D_tmp + 3] := b_D[D_tmp + 3] / b_a_tmp;
+b_D[D_tmp_0 + 3] := b_D[D_tmp_0 + 3] - (b_D[D_tmp + 3] * b_a);
+b_D[D_tmp_0 + 3] := b_D[D_tmp_0 + 3] / f1_tmp_0;
+b_D[D_tmp + 3] := b_D[D_tmp + 3] - (b_D[D_tmp_0 + 3] * f1_tmp);
+b_D[rtemp + 3] := b_D[rtemp + 3] - (b_D[D_tmp_0 + 3] * c_A[r3]);
+b_D[rtemp + 3] := b_D[rtemp + 3] - (b_D[D_tmp + 3] * c_A[b_r2]);
+(* '<S1>:1:14' D01=[1 0 0 ;0 f1 0;0 0 g3]; *)
+(* '<S1>:1:15' D02=[1 0 0 ;0 f2 0;0 0 g3]; *)
+(* '<S1>:1:16' tau_drive=D1*tau; *)
+(* '<S1>:1:17' tau_drive_single1=inv(D01)*tau; *)
+(* '<S1>:1:17' tau_drive_single2=inv(D02)*tau; *)
+(* MATLAB Function: '<Root>/MATLAB Function3' *)
+c_A[0] := 1.0;
+c_A[3] := 0.0;
+c_A[6] := 0.0;
+c_A[1] := 0.0;
+c_A[4] := f1;
+c_A[7] := 0.0;
+c_A[2] := 0.0;
+c_A[5] := 0.0;
+c_A[8] := g3;
+i0_inv(x := c_A);
+tmp := i0_inv.y;
+
+FOR b_r1 := 0 TO 2 DO 
+    (* Outport: '<Root>/tau_drive_single1' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function3' *)
+    tau_drive_single1[b_r1] := (tmp[b_r1 + 6] * tau[2]) + ((tmp[b_r1 + 3] * tau[1]) + (tmp[b_r1] * tau[0]));
+END_FOR;
+
+(* MATLAB Function: '<Root>/MATLAB Function3' *)
+c_A[0] := 1.0;
+c_A[3] := 0.0;
+c_A[6] := 0.0;
+c_A[1] := 0.0;
+c_A[4] := f2;
+c_A[7] := 0.0;
+c_A[2] := 0.0;
+c_A[5] := 0.0;
+c_A[8] := g3;
+i0_inv(x := c_A);
+tmp := i0_inv.y;
+
+FOR b_r1 := 0 TO 2 DO 
+    (* Outport: '<Root>/tau_drive_single2' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function3' *)
+    tau_drive_single2[b_r1] := (tmp[b_r1 + 6] * tau[2]) + ((tmp[b_r1 + 3] * tau[1]) + (tmp[b_r1] * tau[0]));
+END_FOR;
+
+
+FOR b_r1 := 0 TO 3 DO 
+    (* Outport: '<Root>/tau_drive' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function3' *)
+    tau_drive[b_r1] := (b_D[b_r1 + 8] * tau[2]) + ((b_D[b_r1 + 4] * tau[1]) + (b_D[b_r1] * tau[0]));
+END_FOR;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Tau_distribution">
+      <LineId Id="3" Count="191" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

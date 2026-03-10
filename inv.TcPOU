@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="inv" Id="{f9ad0799-1c1e-4c73-b380-5a4280284efd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK inv
+VAR_INPUT
+	x: ARRAY[0..8] OF LREAL;
+END_VAR
+VAR_OUTPUT
+	y: ARRAY[0..8] OF LREAL;
+END_VAR
+VAR
+	b_x: ARRAY[0..8] OF LREAL;
+	p1: DINT;
+	p2: DINT;
+	p3: DINT;
+	absx11: LREAL;
+	absx21: LREAL;
+	absx31: LREAL;
+	itmp: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+FOR p1 := 0 TO 8 DO 
+    b_x[p1] := x[p1];
+END_FOR;
+
+p1 := 0;
+p2 := 3;
+p3 := 6;
+absx11 := ABS(x[0]);
+absx21 := ABS(x[1]);
+absx31 := ABS(x[2]);
+
+IF (absx21 > absx11) AND (absx21 > absx31) THEN 
+    p1 := 3;
+    p2 := 0;
+    b_x[0] := x[1];
+    b_x[1] := x[0];
+    b_x[3] := x[4];
+    b_x[4] := x[3];
+    b_x[6] := x[7];
+    b_x[7] := x[6];
+ELSIF absx31 > absx11 THEN 
+    p1 := 6;
+    p3 := 0;
+    b_x[0] := x[2];
+    b_x[2] := x[0];
+    b_x[3] := x[5];
+    b_x[5] := x[3];
+    b_x[6] := x[8];
+    b_x[8] := x[6];
+END_IF;
+
+b_x[1] := b_x[1] / b_x[0];
+b_x[2] := b_x[2] / b_x[0];
+b_x[4] := b_x[4] - (b_x[1] * b_x[3]);
+b_x[5] := b_x[5] - (b_x[2] * b_x[3]);
+b_x[7] := b_x[7] - (b_x[1] * b_x[6]);
+b_x[8] := b_x[8] - (b_x[2] * b_x[6]);
+
+IF ABS(b_x[5]) > ABS(b_x[4]) THEN 
+    itmp := p2;
+    p2 := p3;
+    p3 := itmp;
+    absx11 := b_x[1];
+    b_x[1] := b_x[2];
+    b_x[2] := absx11;
+    absx11 := b_x[4];
+    b_x[4] := b_x[5];
+    b_x[5] := absx11;
+    absx11 := b_x[7];
+    b_x[7] := b_x[8];
+    b_x[8] := absx11;
+END_IF;
+
+b_x[5] := b_x[5] / b_x[4];
+b_x[8] := b_x[8] - (b_x[5] * b_x[7]);
+absx11 := ((b_x[1] * b_x[5]) - b_x[2]) / b_x[8];
+absx21 := ( -((b_x[7] * absx11) + b_x[1])) / b_x[4];
+y[p1] := ((1.0 - (b_x[3] * absx21)) - (b_x[6] * absx11)) / b_x[0];
+y[p1 + 1] := absx21;
+y[p1 + 2] := absx11;
+absx11 := ( -b_x[5]) / b_x[8];
+absx21 := (1.0 - (b_x[7] * absx11)) / b_x[4];
+y[p2] := ( -((b_x[3] * absx21) + (b_x[6] * absx11))) / b_x[0];
+y[p2 + 1] := absx21;
+y[p2 + 2] := absx11;
+absx11 := 1.0 / b_x[8];
+absx21 := (( -b_x[7]) * absx11) / b_x[4];
+y[p3] := ( -((b_x[3] * absx21) + (b_x[6] * absx11))) / b_x[0];
+y[p3 + 1] := absx21;
+y[p3 + 2] := absx11;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="inv">
+      <LineId Id="3" Count="72" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

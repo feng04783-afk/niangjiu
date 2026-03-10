@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="T_load" Id="{4117e678-5f3b-41e6-9e74-a93565bebf34}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_load
+VAR_INPUT
+	a: ARRAY[0..2] OF LREAL;
+	q: ARRAY[0..2] OF LREAL;
+	mload1: LREAL;
+END_VAR
+VAR_OUTPUT
+	Tau_load: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR
+	F_load_tmp: LREAL;
+	F_load_tmp_0: LREAL;
+	F_load_tmp_1: LREAL;
+	F_load_tmp_2: LREAL;
+	F_load_tmp_3: ARRAY[0..8] OF LREAL;
+	i: DINT;
+	F_load_tmp_tmp: LREAL;
+	F_load_tmp_tmp_tmp: LREAL;
+	F_load_tmp_tmp_tmp_0: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* MATLAB Function: '<Root>/MATLAB Function5' *)
+(* MATLAB Function 'MATLAB Function5': '<S1>:1' *)
+(* '<S1>:1:2' g=9806.65; *)
+(* '<S1>:1:3' theta1=q(1); *)
+(* '<S1>:1:3' theta4=q(2); *)
+(* '<S1>:1:3' theta5=q(3); *)
+(* '<S1>:1:4' jacobian=[-sin(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*cos(theta1)*sin(theta4) -L3*cos(theta1)*sin(theta5) ; *)
+(* '<S1>:1:5'     cos(theta1)*(L1*cos(theta4)+L3*cos(theta5)-S1) -L1*sin(theta1)*sin(theta4) -L3*sin(theta1)*sin(theta5) ; *)
+(* '<S1>:1:6'     0 L1*cos(theta4) L3*cos(theta5) ]; *)
+(* '<S1>:1:7' G_load=[0,0,mload1*g].'; *)
+(* '<S1>:1:7' Fa_load=mload1*a; *)
+(* '<S1>:1:8' F_load=-jacobian.'*(-Fa_load+G_load); *)
+F_load_tmp := COS(q[0]);
+F_load_tmp_0 := SIN(q[0]);
+F_load_tmp_1 := SIN(q[1]);
+F_load_tmp_2 := SIN(q[2]);
+(* MATLAB Function: '<Root>/MATLAB Function5' incorporates:
+ *  Inport: '<Root>/a' *)
+F_load_tmp_tmp_tmp := L1 * COS(q[1]);
+F_load_tmp_tmp_tmp_0 := L3 * COS(q[2]);
+F_load_tmp_tmp := (F_load_tmp_tmp_tmp + F_load_tmp_tmp_tmp_0) - S1;
+F_load_tmp_3[0] :=  -(F_load_tmp_tmp * ( -F_load_tmp_0));
+F_load_tmp_3[1] :=  -((( -L1) * F_load_tmp) * F_load_tmp_1);
+F_load_tmp_3[2] :=  -((( -L3) * F_load_tmp) * F_load_tmp_2);
+F_load_tmp_3[3] :=  -(F_load_tmp_tmp * F_load_tmp);
+F_load_tmp_3[4] :=  -((( -L1) * F_load_tmp_0) * F_load_tmp_1);
+F_load_tmp_3[5] :=  -((( -L3) * F_load_tmp_0) * F_load_tmp_2);
+F_load_tmp_3[6] := -0.0;
+F_load_tmp_3[7] :=  -F_load_tmp_tmp_tmp;
+F_load_tmp_3[8] :=  -F_load_tmp_tmp_tmp_0;
+F_load_tmp :=  -(mload1 * a[0]);
+F_load_tmp_0 :=  -(mload1 * a[1]);
+F_load_tmp_1 := ( -(mload1 * a[2])) + (mload1 * 9806.65);
+
+FOR i := 0 TO 2 DO 
+    (* Outport: '<Root>/F_load' incorporates:
+     *  MATLAB Function: '<Root>/MATLAB Function5' *)
+    Tau_load[i] := ((F_load_tmp_3[i + 6] * F_load_tmp_1) + ((F_load_tmp_3[i + 3] * F_load_tmp_0) + (F_load_tmp_3[i] * F_load_tmp)))*1E-6;
+END_FOR;
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="T_load">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

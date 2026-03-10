@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="PLC_BOOL_TO_LREAL" Id="{ac3bc09b-5f96-416d-9711-877bf55364fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION PLC_BOOL_TO_LREAL : LREAL
+VAR_INPUT
+	in: BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+IF in THEN 
+    PLC_BOOL_TO_LREAL := 1.0;
+ELSE 
+    PLC_BOOL_TO_LREAL := 0.0;
+END_IF;
+]]></ST>
+    </Implementation>
+    <LineIds Name="PLC_BOOL_TO_LREAL">
+      <LineId Id="12" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

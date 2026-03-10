@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="Servo_PDOS" Id="{941abeca-b409-45c4-acb6-97576ad13091}">
+    <Declaration><![CDATA[TYPE Servo_PDOS :
+STRUCT
+	target_position: DINT;(*各微组顺宇按何服站号排列/*)
+    controlword: UINT;
+	mode:  SINT;
+	target_velocity:  UDINT;
+	profile_velocity:  UDINT;
+	profile_acceleration:  UDINT;
+	profile_deceleration:  UDINT;
+	polarity : USINT;
+	target_torque: INT;
+	torque_slope: UDINT;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="acceleration" Id="{b5e5cbaa-9046-4570-bc96-7c07896c6045}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK acceleration
+VAR_INPUT
+    a: ARRAY [0..2] OF LREAL;
+    q: ARRAY [0..2] OF LREAL;
+    dq: ARRAY [0..2] OF LREAL;
+
+END_VAR
+VAR_OUTPUT
+    d2q: ARRAY [0..2] OF LREAL; //广义坐标加速度
+    d2q_t: ARRAY [0..2] OF LREAL;
+END_VAR
+VAR_TEMP
+    H: ARRAY [0..26] OF LREAL;
+    j_a: LREAL;
+    x: ARRAY [0..8] OF LREAL;
+    b_x: ARRAY [0..8] OF LREAL;
+    p1: DINT;
+    p2: DINT;
+    p3: DINT;
+    absx11: LREAL;
+    absx21: LREAL;
+    absx31: LREAL;
+    x_tmp: LREAL;
+    x_tmp_0: LREAL;
+    x_tmp_1: LREAL;
+    d2t_tmp: LREAL;
+    a_0: ARRAY [0..2] OF LREAL;
+    x_tmp_2: LREAL;
+    x_tmp_3: LREAL;
+    k_a_tmp: LREAL;
+    o_a_tmp: LREAL;
+    p_a_tmp: LREAL;
+    d2t_tmp_0: LREAL;
+    d2t_tmp_1: LREAL;
+    d2t_tmp_tmp: LREAL;
+    d2t_tmp_2: LREAL;
+    d2t_tmp_3: LREAL;
+    d2t_tmp_4: LREAL;
+    temp1: LREAL;
+    temp2: LREAL;
+	
+	d2q1: LREAL;//驱动1加速度
+    d2t: ARRAY [0..2] OF LREAL;//驱动2-1,2-2,3的加速度
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[absx11 := COS(q[0]);
+absx21 := SIN(q[0]);
+absx31 := SIN(q[1]);
+x_tmp := SIN(q[2]);
+x_tmp_0 := COS(q[1]);
+x_tmp_1 := COS(q[2]);
+(* MATLAB Function: '<Root>/Accelerated ve' *)
+x[0] := (((L1 * x_tmp_0) + (L3 * x_tmp_1)) - S1) * ( -absx21);
+x[3] := (( -L1) * absx11) * absx31;
+x[6] := (( -L3) * absx11) * x_tmp;
+x[1] := (((L1 * COS(q[1])) + (L3 * COS(q[2]))) - S1) * absx11;
+x[4] := (( -L1) * absx21) * absx31;
+x[7] := (( -L3) * absx21) * x_tmp;
+x[2] := 0.0;
+x_tmp_2 := L1 * COS(q[1]);
+x[5] := x_tmp_2;
+x_tmp_3 := L3 * COS(q[2]);
+x[8] := x_tmp_3;
+(* '<S1>:1:11' H=zeros(3,3,3); *)
+(* MATLAB Function: '<Root>/Accelerated ve' *)
+(* 第一页：J对theta1求偏导 *)
+(* '<S1>:1:13' H(:,:,1)=[-cos(theta1)*(L1*cos(theta4) - S1 + L3*cos(theta5)), L1*sin(theta1)*sin(theta4), L3*sin(theta1)*sin(theta5); *)
+(* '<S1>:1:14'     -sin(theta1)*(L1*cos(theta4) - S1 + L3*cos(theta5)), -L1*cos(theta1)*sin(theta4), -L3*cos(theta1)*sin(theta5); *)
+(* '<S1>:1:15'     0,0,0]; *)
+x_tmp_2 := (x_tmp_2 - S1) + x_tmp_3;
+H[0] := x_tmp_2 * ( -absx11);
+H[3] := (L1 * absx21) * absx31;
+H[6] := (L3 * absx21) * x_tmp;
+H[1] := x_tmp_2 * ( -SIN(q[0]));
+x_tmp_2 := (( -L1) * COS(q[0])) * SIN(q[1]);
+H[4] := x_tmp_2;
+absx11 := (( -L3) * COS(q[0])) * SIN(q[2]);
+H[7] := absx11;
+H[2] := 0.0;
+H[5] := 0.0;
+H[8] := 0.0;
+(* 第二页：J对theta4求偏导 *)
+(* '<S1>:1:17' H(:,:,2)=[L1*sin(theta1)*sin(theta4), -L1*cos(theta1)*cos(theta4),0; *)
+(* '<S1>:1:18'     -L1*cos(theta1)*sin(theta4), -L1*cos(theta4)*sin(theta1), 0; *)
+(* '<S1>:1:19'     0, -L1*sin(theta4), 0]; *)
+H[9] := (L1 * SIN(q[0])) * SIN(q[1]);
+H[12] := (( -L1) * COS(q[0])) * x_tmp_0;
+H[15] := 0.0;
+H[10] := x_tmp_2;
+H[13] := (( -L1) * x_tmp_0) * absx21;
+H[16] := 0.0;
+H[11] := 0.0;
+H[14] := ( -L1) * absx31;
+H[17] := 0.0;
+(* 第三页：J对theta5求偏导 *)
+(* '<S1>:1:21' H(:,:,3)=[L3*sin(theta1)*sin(theta5), 0, -L3*cos(theta1)*cos(theta5); *)
+(* '<S1>:1:22'     -L3*cos(theta1)*sin(theta5), 0, -L3*cos(theta5)*sin(theta1); *)
+(* '<S1>:1:23'     0,0, -L3*sin(theta5)]; *)
+H[18] := (L3 * SIN(q[0])) * SIN(q[2]);
+H[21] := 0.0;
+H[24] := (( -L3) * COS(q[0])) * x_tmp_1;
+H[19] := absx11;
+H[22] := 0.0;
+H[25] := (( -L3) * x_tmp_1) * absx21;
+H[20] := 0.0;
+H[23] := 0.0;
+H[26] := ( -L3) * x_tmp;
+(* '<S1>:1:24' J_dot=dq(1)*H(:,:,1)+dq(2)*H(:,:,2)+dq(3)*H(:,:,3); *)
+(* 笑哭，dq1居然也要变号 *)
+(* '<S1>:1:25' d2q =inv(jacobian)*(a-J_dot*dq); *)
+(* MATLAB Function: '<Root>/Accelerated ve' *)
+FOR p1 := 0 TO 8 DO 
+    b_x[p1] := x[p1];
+END_FOR;
+p1 := 0;
+p2 := 3;
+p3 := 6;
+absx21 := ABS(x[1]);
+IF (absx21 > ABS(x[0])) AND (absx21 > 0.0) THEN 
+    p1 := 3;
+    p2 := 0;
+    b_x[0] := x[1];
+    b_x[1] := x[0];
+    b_x[3] := x[4];
+    b_x[4] := x[3];
+    b_x[6] := x[7];
+    b_x[7] := x[6];
+END_IF;
+b_x[1] := b_x[1] / b_x[0];
+b_x[2] := b_x[2] / b_x[0];
+b_x[4] := b_x[4] - (b_x[1] * b_x[3]);
+b_x[5] := b_x[5] - (b_x[2] * b_x[3]);
+b_x[7] := b_x[7] - (b_x[1] * b_x[6]);
+b_x[8] := b_x[8] - (b_x[2] * b_x[6]);
+IF ABS(b_x[5]) > ABS(b_x[4]) THEN 
+    p3 := p2;
+    p2 := 6;
+    absx11 := b_x[1];
+    b_x[1] := b_x[2];
+    b_x[2] := absx11;
+    absx11 := b_x[4];
+    b_x[4] := b_x[5];
+    b_x[5] := absx11;
+    absx11 := b_x[7];
+    b_x[7] := b_x[8];
+    b_x[8] := absx11;
+END_IF;
+b_x[5] := b_x[5] / b_x[4];
+b_x[8] := b_x[8] - (b_x[5] * b_x[7]);
+absx11 := ((b_x[1] * b_x[5]) - b_x[2]) / b_x[8];
+absx21 := ( -((b_x[7] * absx11) + b_x[1])) / b_x[4];
+x[p1] := ((1.0 - (b_x[3] * absx21)) - (b_x[6] * absx11)) / b_x[0];
+x[p1 + 1] := absx21;
+x[p1 + 2] := absx11;
+absx11 := ( -b_x[5]) / b_x[8];
+absx21 := (1.0 - (b_x[7] * absx11)) / b_x[4];
+x[p2] := ( -((b_x[3] * absx21) + (b_x[6] * absx11))) / b_x[0];
+x[p2 + 1] := absx21;
+x[p2 + 2] := absx11;
+absx11 := 1.0 / b_x[8];
+absx21 := (( -b_x[7]) * absx11) / b_x[4];
+x[p3] := ( -((b_x[3] * absx21) + (b_x[6] * absx11))) / b_x[0];
+x[p3 + 1] := absx21;
+x[p3 + 2] := absx11;
+absx21 := dq[0];
+x_tmp := dq[1];
+x_tmp_1 := dq[2];
+(* MATLAB Function: '<Root>/Accelerated ve' *)
+FOR p1 := 0 TO 2 DO 
+    b_x[3 * p1] := ((H[(3 * p1) + 9] * x_tmp) + (H[3 * p1] * absx21)) + (H[(3 * p1) + 18] * x_tmp_1);
+    p2 := (3 * p1) + 1;
+    b_x[p2] := ((H[p2] * absx21) + (H[(3 * p1) + 10] * x_tmp)) + (H[(3 * p1) + 19] * x_tmp_1);
+    p2 := (3 * p1) + 2;
+    b_x[p2] := ((H[p2] * absx21) + (H[(3 * p1) + 11] * x_tmp)) + (H[(3 * p1) + 20] * x_tmp_1);
+END_FOR;
+(* MATLAB Function: '<Root>/Accelerated ve' *)
+FOR p1 := 0 TO 2 DO 
+    a_0[p1] := a[p1] - (((b_x[p1 + 3] * dq[1]) + (b_x[p1] * dq[0])) + (b_x[p1 + 6] * dq[2]));
+END_FOR;
+(* MATLAB Function: '<Root>/Accelerated ve' incorporates:
+ *  Outport: '<Root>/d2t' *)
+FOR p1 := 0 TO 2 DO 
+    d2q[p1] := (x[p1 + 6] * a_0[2]) + ((x[p1 + 3] * a_0[1]) + (x[p1] * a_0[0]));
+END_FOR;
+(* 变号后居然吻合了，证明雅克比需要变一次号 *)
+(* '<S1>:1:26' d2q1=d2q(1); *)
+(* '<S1>:1:28' n=sqrt((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2); *)
+absx31 := COS(-0.52359877559829882 - q[2]);
+absx21 := M1 - (R2 * absx31);
+absx11 := SIN(-0.52359877559829882 - q[2]);
+x_tmp := M2 - (R2 * absx11);
+(* '<S1>:1:29' phi1=asin((K1-R1*sin(theta2))/Le); *)
+(* '<S1>:1:30' phi2=acos((K2-R1*cos(theta2))/Le); *)
+(* 新的局部雅克比 *)
+(* '<S1>:1:33' J1=-R1*sin(theta2)-R1*cos(theta2)*tan(phi1); *)
+(* '<S1>:1:34' J2=R1*cos(theta2)+R1*sin(theta2)/tan(phi2); *)
+(* '<S1>:1:35' J3=(R2*(M2*cos(theta3) - M1*sin(theta3)))/n; *)
+(* '<S1>:1:36' J1_dot=-dq(2)*((R1^2*cos(theta2)^2)/(Le*sqrt(1 - (K1 - R1*sin(theta2))^2/Le^2)) - R1*cos(theta2) + (R1^2*cos(theta2)^2*(K1 - R1*sin(theta2))^2)/(Le^3*(1 - (K1 - R1*sin(theta2))^2/Le^2)^(3/2)) + (R1*sin(theta2)*(K1 - R1*sin(theta2)))/(Le*sqrt(1 - (K1 - R1*sin(theta2))^2/Le^2))); *)
+x_tmp_0 := COS(2.6179938779914944 - q[1]);
+x_tmp_1 := SIN(2.6179938779914944 - q[1]);
+x_tmp_2 := K1 - (R1 * x_tmp_1);
+x_tmp_3 := K1 - (SIN(2.6179938779914944 - q[1]) * R1);
+(* '<S1>:1:37' J2_dot=-dq(2)*((R1^2*sin(theta2)^2)/(Le*sqrt(1 - (K2 - R1*cos(theta2))^2/Le^2)) - R1*sin(theta2) + (R1*cos(theta2)*(K2 - R1*cos(theta2)))/(Le*sqrt(1 - (K2 - R1*cos(theta2))^2/Le^2)) + (R1^2*sin(theta2)^2*(K2 - R1*cos(theta2))^2)/(Le^3*(1 - (K2 - R1*cos(theta2))^2/Le^2)^(3/2))); *)
+j_a := K2 - (R1 * x_tmp_0);
+k_a_tmp := K2 - (COS(2.6179938779914944 - q[1]) * R1);
+(* '<S1>:1:38' J3_dot=-dq(3)*(- (R2*(M1*cos(theta3) + M2*sin(theta3)))/sqrt((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2) - (R2*(M2*cos(theta3) - M1*sin(theta3))*(2*R2*sin(theta3)*(M1 - R2*cos(theta3)) - 2*R2*cos(theta3)*(M2 - R2*sin(theta3))))/(2*((M1 - R2*cos(theta3))^2 + (M2 - R2*sin(theta3))^2)^(3/2))); *)
+o_a_tmp := M1 - (COS(-0.52359877559829882 - q[2]) * R2);
+p_a_tmp := M2 - (SIN(-0.52359877559829882 - q[2]) * R2);
+(* '<S1>:1:39' d2t=[0 0 0]; *)
+(* 二型运动学雅克比求导-线性驱动加速度 *)
+(* '<S1>:1:41' d2t(1)=J1*d2q(2)+J1_dot*dq(2); *)
+d2t_tmp := EXPT(L7, 3.0);
+d2t_tmp_tmp := R1 * R1;
+x_tmp_0 := d2t_tmp_tmp * (x_tmp_0 * x_tmp_0);
+d2t_tmp_0 := L7 * L7;
+d2t_tmp_1 := COS(2.6179938779914944 - q[1]) * R1;
+d2t_tmp_2 := SIN(2.6179938779914944 - q[1]) * R1;
+d2t_tmp_3 := x_tmp_3 * x_tmp_3;
+d2t_tmp_4 := 1.0 - (d2t_tmp_3 / d2t_tmp_0);
+temp1 := ASIN(x_tmp_3 / L7);
+d2t[0] := ((((((x_tmp_0 / (SQRT(1.0 - ((x_tmp_2 * x_tmp_2) / d2t_tmp_0)) * L7)) - d2t_tmp_1) + ((x_tmp_0 * d2t_tmp_3) / (EXPT(d2t_tmp_4, 1.5) * d2t_tmp))) + ((x_tmp_3 * d2t_tmp_2) / (SQRT(d2t_tmp_4) * L7))) * ( -dq[1])) * dq[1]) + (((( -R1) * x_tmp_1) - (TAN(temp1) * d2t_tmp_1)) * d2q[1]);
+(* '<S1>:1:42' d2t(2)=J2*d2q(2)+J2_dot*dq(2); *)
+x_tmp_0 := d2t_tmp_tmp * (x_tmp_1 * x_tmp_1);
+d2t_tmp_3 := k_a_tmp * k_a_tmp;
+d2t_tmp_4 := 1.0 - (d2t_tmp_3 / d2t_tmp_0);
+temp2 := ACOS(k_a_tmp / L7);
+d2t[1] := ((((((x_tmp_0 / (SQRT(1.0 - ((j_a * j_a) / d2t_tmp_0)) * L7)) - d2t_tmp_2) + ((k_a_tmp * d2t_tmp_1) / (SQRT(d2t_tmp_4) * L7))) + ((x_tmp_0 * d2t_tmp_3) / (EXPT(d2t_tmp_4, 1.5) * d2t_tmp))) * ( -dq[1])) * dq[1]) + (((d2t_tmp_2 / TAN(temp2)) + d2t_tmp_1) * d2q[1]);
+(* '<S1>:1:43' d2t(3)=J3*d2q(3)+J3_dot*dq(3); *)
+d2t_tmp := (o_a_tmp * o_a_tmp) + (p_a_tmp * p_a_tmp);
+d2t_tmp_0 := ((absx31 * M2) - (absx11 * M1)) * R2;
+d2t[2] := ((((( -(((M1 * absx31) + (M2 * absx11)) * R2)) / SQRT(d2t_tmp)) - ((((o_a_tmp * ((2.0 * R2) * absx11)) - (p_a_tmp * ((2.0 * R2) * absx31))) * d2t_tmp_0) / (EXPT(d2t_tmp, 1.5) * 2.0))) * ( -dq[2])) * dq[2]) + ((d2t_tmp_0 / SQRT((absx21 * absx21) + (x_tmp * x_tmp))) * d2q[2]);
+(* Outport: '<Root>/d2q1' incorporates:
+ *  MATLAB Function: '<Root>/Accelerated ve' *)
+d2q1 := d2q[0];
+d2q_t[0] :=d2q1;
+d2q_t[1] :=d2t[1];
+d2q_t[2] :=d2t[2];]]></ST>
+    </Implementation>
+    <LineIds Name="acceleration">
+      <LineId Id="550" Count="187" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="741" Count="0" />
+      <LineId Id="743" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

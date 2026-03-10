@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="MAIN" Id="{7ac16c81-32a7-479c-a6d1-99f2db17630a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	Servo_PDO AT %Q*: ARRAY[1..4] OF Servo_PDOS;
+	Ton_initial2: Ton;
+	step1: BOOL;
+	v: LREAL;
+	P: LREAL;
+	i1: INT ;
+	servo_initial: BOOL;
+	clock: Ton;
+	t: REAL;
+	Ton_initial3: Ton;
+	t3: REAL;
+	W: REAL;
+	VE: REAL;
+	flag: INT;
+END_VAR
+
+    ]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[servo_initial:=TRUE;
+IF servo_initial THEN(*给伺服控制字6*)
+FOR i1:=1 TO 1 BY 1 DO 
+Servo_PDO[i1].controlword:=10#6;
+Servo_PDO[i1].mode:=16#1;
+END_FOR
+servo_initial:=FALSE;
+END_IF
+
+step1:=TRUE;
+Ton_initial2(IN:= step1, PT:=T#5000MS, Q=> ,ET=> );
+
+IF Ton_initial2.Q  THEN(*延时2秒后*)
+	
+	clock(IN:= step1, PT:=T#10000MS, Q=> ,ET=> );
+    t:=0.001*TIME_TO_REAL(clock.ET);
+	Ton_initial3(IN:=NOT Ton_initial3.Q, PT:=T#1MS, Q=> ,ET=> );
+IF Ton_initial3.Q THEN
+   Servo_PDO[i1].controlword^:=10#47;
+   CASE flag OF //走正弦或斜坡（匀速）
+	   1:
+	   W:=0.2*3.1415926;
+	   VE:=240*0.004*1747627;
+   p:=REAL_TO_DINT(0+VE-VE*COS(W*t));
+   V:=REAL_TO_UDINT(ABS(VE*W*SIN(W*t)));
+   IF (VE*W*SIN(W*t))<0 THEN
+       %QX27.7:=1;
+   ELSE
+	   %QX27.7:=0;
+   END_IF
+       2:
+   p:=REAL_TO_DINT(0+30E4*t);
+   V:=REAL_TO_UDINT(30E4);
+   END_CASE
+   
+   Servo_PDO[i1].target_position:=p;
+   Servo_PDO[i1].profile_velocity:=V;
+
+ELSE
+	
+	Servo_PDO[i1].controlword:=10#63;
+END_IF
+   IF clock.Q THEN(*运行十秒*)
+	  Servo_PDO[i1].controlword:=10#6; 
+   END_IF
+
+END_IF
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="32" Count="6" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="44" Count="3" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="85" Count="17" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="107" Count="6" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="78" Count="5" />
+      <LineId Id="76" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

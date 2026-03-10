@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="In_kine" Id="{ddd93cca-cfd1-4744-8a9b-71eadf8f5764}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK  In_kine
+VAR_INPUT
+	dpt:ARRAY[0..2] OF LREAL;
+END_VAR
+VAR_OUTPUT
+	q: ARRAY[0..2] OF LREAL;
+    theta2_1: LREAL;
+	 MOTION_INPUT: ARRAY[0..3] OF LREAL;
+END_VAR
+VAR
+	theta3: LREAL;
+	K,y,b_S: LREAL;
+	theta1,theta4,theta2,x1,y1,n1: LREAL;
+	theta2_2: LREAL;
+	t1,t2,t3: LREAL;
+	theta5: LREAL;
+	theta4_tmp: LREAL;
+	b_a_tmp: LREAL;
+	d_a_tmp: LREAL;
+	theta4_tmp_0: LREAL;
+	temp1: LREAL;
+	temp2: LREAL;
+	temp3: LREAL;
+	SIGMA1,SIGMA5,SIGMA6,U1,U2,U3,U11,U21:LREAL;
+	SIGMA7,SIGMA8,SIGMA9,SIGMA10: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//theta1 的求解
+K:=dpt[0];y:=dpt[1];b_S:=dpt[2];
+IF (K > 0.0) AND (y > 0.0) THEN 
+    (* '<S1>:1:8' theta1:=atan(y/K); *)
+    theta1 := ATAN(y / K);
+ELSIF (K > 0.0) AND (y < 0.0) THEN 
+
+    theta1 := ATAN(y / K) + 6.28;
+ELSIF K < 0.0 THEN 
+
+    theta1 := ATAN(y / K) + 3.14;
+ELSIF (K = 0.0) AND (y < 0.0) THEN 
+
+    theta1 := 4.712;
+ELSIF (K = 0.0) AND (y > 0.0) THEN 
+
+    theta1 := 1.57;
+ELSIF (y = 0.0) AND (K > 0.0) THEN 
+
+    theta1 := 0.0;
+ELSE 
+
+    theta1 := 0.0;
+END_IF;
+SIGMA1:=b_S-S2; 
+
+(*IF (K <> 0.0) OR (K =0 AND y=0) THEN 
+	SIGMA6:=K/COS(theta1)+S1;
+ELSIF y <> 0.0 THEN 
+	SIGMA6:=y/SIN(theta1)+S1;
+END_IF*)
+IF (y <> 0.0) THEN 
+	SIGMA6:=y/SIN(theta1)+S1;	
+ELSE
+	SIGMA6:=K/COS(theta1)+S1;
+END_IF
+
+U1:=EXPT(SIGMA1,2)+EXPT(SIGMA6,2)+EXPT(L1,2)-EXPT(L3,2);
+U11:=EXPT(SIGMA1,2)+EXPT(SIGMA6,2)-EXPT(L1,2)+EXPT(L3,2);
+U2:=2*L1*SQRT(EXPT(SIGMA1,2)+EXPT(SIGMA6,2));
+U21:=2*L3*SQRT(EXPT(SIGMA1,2)+EXPT(SIGMA6,2));
+U3:=ATAN(SIGMA1/SIGMA6);
+theta4:=ACOS(U1/U2)+U3;
+
+theta5:=-ACOS(U11/U21)+U3;
+
+q[0] := theta1;
+q[1] := theta4;
+q[2] := theta5;
+
+theta2:=0.833333*pi-theta4;
+theta3:=b_Seta-theta5;
+
+SIGMA7:=EXPT(L7,2)-EXPT((K1-R1*SIN(theta2)),2);
+x1:=R1*COS(theta2)-SQRT(SIGMA7);//肩关节到滑块1的水平距离
+t1:=-x1-TT1;
+theta2_1:=t1/10*5*EXPT(2,23);//
+
+SIGMA8:=EXPT(L7,2)-EXPT((K2-R1*COS(theta2)),2);
+y1:=R1*SIN(theta2)-SQRT(SIGMA8);//肩关节到滑块2的竖直距离
+t2:=-y1-TT2;
+theta2_2:=t2/10*5*EXPT(2,23);//
+
+
+SIGMA9:=M1-R2*COS(theta3); SIGMA10:=M2-R2*SIN(theta3);
+n1:=SQRT(EXPT(SIGMA9,2)+EXPT(SIGMA10,2));//L(PD)铰链P到滑块3的距离
+t3:=n1-TT3; 
+ MOTION_INPUT[0] := theta1-offset0;
+ MOTION_INPUT[1] := t2;
+ MOTION_INPUT[2] := t3;
+ MOTION_INPUT[3] := t1;]]></ST>
+    </Implementation>
+    <LineIds Name="In_kine">
+      <LineId Id="36" Count="30" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="67" Count="30" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="127" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

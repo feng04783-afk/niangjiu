@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="TRACE_Access" Id="{4df0dd77-46b7-4313-aaa6-ee930a44f3d4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TRACE_Access
+VAR_INPUT
+	t: LREAL;
+	flag: LREAL;
+END_VAR
+VAR_OUTPUT
+	dpt: ARRAY[0..2] OF LREAL;
+	V: ARRAY[0..2] OF LREAL;
+	a: ARRAY[0..2] OF LREAL;
+END_VAR
+VAR
+	K_1: LREAL;
+	KV_1: LREAL;
+	Ka_1: LREAL;
+	b_K_1: LREAL;
+	b_KV_1: LREAL;
+	b_Ka_1: LREAL;
+	K_2: LREAL;
+	KV_2: LREAL;
+	Ka_2: LREAL;
+	b_K_2: LREAL;
+	b_KV_2: LREAL;
+	b_Ka_2: LREAL;
+	K_3: LREAL;
+	KV_3: LREAL;
+	Ka_3: LREAL;
+	b_K_3: LREAL;
+	b_KV_3: LREAL;
+	b_Ka_3: LREAL;
+	K_4: LREAL;
+	KV_4: LREAL;
+	Ka_4: LREAL;
+	b_K_4: LREAL;
+	b_KV_4: LREAL;
+	b_Ka_4: LREAL;
+	S_1: LREAL;
+	SV_1: LREAL;
+	Sa_1: LREAL;
+	b_S_1: LREAL;
+	b_SV_1: LREAL;
+	b_Sa_1: LREAL;
+	S_2: LREAL;
+	SV_2: LREAL;
+	Sa_2: LREAL;
+	b_S_2: LREAL;
+	b_SV_2: LREAL;
+	b_Sa_2: LREAL;
+	S_3: LREAL;
+	SV_3: LREAL;
+	Sa_3: LREAL;
+	b_S_3: LREAL;
+	b_SV_3: LREAL;
+	b_Sa_3: LREAL;
+	S_4: LREAL;
+	SV_4: LREAL;
+	Sa_4: LREAL;
+	b_S_4: LREAL;
+	b_SV_4: LREAL;
+	b_Sa_4: LREAL;
+	Z_1: LREAL;
+	ZV_1: LREAL;
+	Za_1: LREAL;
+	b_Z_1: LREAL;
+	b_ZV_1: LREAL;
+	b_Za_1: LREAL;
+	i0_polynomial_v: polynomial_v;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* MATLAB Function: '<Root>/MATLAB Function7' *)
+(* 轨迹规划 *)
+(* MATLAB Function 'MATLAB Function7': '<S1>:1' *)
+(* '<S1>:1:2' if flag==1 *)
+
+IF flag = 1.0 THEN 
+    (* '<S1>:1:3' [K_1,KV_1,Ka_1]=polynomial_v(t,1, 475, 0,0, 325,-200,60); *)
+    i0_polynomial_v(t := t, t1 := 1.0, S0 := 475.0, v0 := 0.0, a0 := 0.0, S1 := 325.0, v1 := -200.0, a1 := 60.0);
+    K_1 := i0_polynomial_v.b_S;
+    KV_1 := i0_polynomial_v.v;
+    Ka_1 := i0_polynomial_v.a;
+    (* 0-1 *)
+    (* '<S1>:1:4' [K_2,KV_2,Ka_2]=polynomial_v((t-1),0.5, 325,-200,60, 225,-200,-20); *)
+    i0_polynomial_v(t := t - 1.0, t1 := 0.5, S0 := 325.0, v0 := -200.0, a0 := 60.0, S1 := 225.0, v1 := -200.0, a1 := -20.0);
+    K_2 := i0_polynomial_v.b_S;
+    KV_2 := i0_polynomial_v.v;
+    Ka_2 := i0_polynomial_v.a;
+    (* 1-1.5 *)
+    (* '<S1>:1:5' [K_3,KV_3,Ka_3]=polynomial_v((t-1.5),0.5, 225,-200,-20, 125,-180,-0); *)
+    i0_polynomial_v(t := t - 1.5, t1 := 0.5, S0 := 225.0, v0 := -200.0, a0 := -20.0, S1 := 125.0, v1 := -180.0, a1 := -0.0);
+    K_3 := i0_polynomial_v.b_S;
+    KV_3 := i0_polynomial_v.v;
+    Ka_3 := i0_polynomial_v.a;
+    (* 1.5-2 *)
+    (* '<S1>:1:6' [K_4,KV_4,Ka_4]=polynomial_v((t-2),1, 125,-180,-10, 0,0,0); *)
+    i0_polynomial_v(t := t - 2.0, t1 := 1.0, S0 := 125.0, v0 := -180.0, a0 := -10.0, S1 := 0.0, v1 := 0.0, a1 := 0.0);
+    K_4 := i0_polynomial_v.b_S;
+    KV_4 := i0_polynomial_v.v;
+    Ka_4 := i0_polynomial_v.a;
+    (* 2-3 *)
+    (* '<S1>:1:7' K_5=0; *)
+    (* '<S1>:1:7' KV_5=0; *)
+    (* '<S1>:1:7' Ka_5=0; *)
+    (* '<S1>:1:8' X=K_1.*(t>=0&t<1)+K_2.*(t>=1&t<1.5)+K_3.*(t>=1.5&t<2)+K_4.*(t>=2&t<3)+K_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:9' VX=KV_1.*(t>=0&t<1)+KV_2.*(t>=1&t<1.5)+KV_3.*(t>=1.5&t<2)+KV_4.*(t>=2&t<3)+KV_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:10' aX=Ka_1.*(t>=0&t<1)+Ka_2.*(t>=1&t<1.5)+Ka_3.*(t>=1.5&t<2)+Ka_4.*(t>=2&t<3)+Ka_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:12' [S_1,SV_1,Sa_1]=polynomial_v(t,1, 0,0,0, 20,36,-10); *)
+    i0_polynomial_v(t := t, t1 := 1.0, S0 := 0.0, v0 := 0.0, a0 := 0.0, S1 := 20.0, v1 := 36.0, a1 := -10.0);
+    S_1 := i0_polynomial_v.b_S;
+    SV_1 := i0_polynomial_v.v;
+    Sa_1 := i0_polynomial_v.a;
+    (* 0-1s *)
+    (* '<S1>:1:13' [S_2,SV_2,Sa_2]=polynomial_v((t-1),0.5, 20,36,-10, 45,75,25); *)
+    i0_polynomial_v(t := t - 1.0, t1 := 0.5, S0 := 20.0, v0 := 36.0, a0 := -10.0, S1 := 45.0, v1 := 75.0, a1 := 25.0);
+    S_2 := i0_polynomial_v.b_S;
+    SV_2 := i0_polynomial_v.v;
+    Sa_2 := i0_polynomial_v.a;
+    (* 1-1.5s *)
+    (* '<S1>:1:14' [S_3,SV_3,Sa_3]=polynomial_v((t-1.5),0.5, 45,75,25, 90,150,300); *)
+    i0_polynomial_v(t := t - 1.5, t1 := 0.5, S0 := 45.0, v0 := 75.0, a0 := 25.0, S1 := 90.0, v1 := 150.0, a1 := 300.0);
+    S_3 := i0_polynomial_v.b_S;
+    SV_3 := i0_polynomial_v.v;
+    Sa_3 := i0_polynomial_v.a;
+    (* 1.5-2s *)
+    (* '<S1>:1:15' [S_4,SV_4,Sa_4]=polynomial_v((t-2),1, 90,150,300, 225,0,0); *)
+    i0_polynomial_v(t := t - 2.0, t1 := 1.0, S0 := 90.0, v0 := 150.0, a0 := 300.0, S1 := 225.0, v1 := 0.0, a1 := 0.0);
+    S_4 := i0_polynomial_v.b_S;
+    SV_4 := i0_polynomial_v.v;
+    Sa_4 := i0_polynomial_v.a;
+    (* 2-3s *)
+    (* '<S1>:1:16' S_5=225; *)
+    (* '<S1>:1:16' SV_5=0; *)
+    (* '<S1>:1:16' Sa_5=0; *)
+    (* '<S1>:1:18' Y=S_1.*(t>=0&t<1)+S_2.*(t>=1&t<1.5)+S_3.*(t>=1.5&t<2)+S_4.*(t>=2&t<3)+S_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:19' VY=SV_1.*(t>=0&t<1)+SV_2.*(t>=1&t<1.5)+SV_3.*(t>=1.5&t<2)+SV_4.*(t>=2&t<3)+SV_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:20' aY=Sa_1.*(t>=0&t<1)+Sa_2.*(t>=1&t<1.5)+Sa_3.*(t>=1.5&t<2)+Sa_4.*(t>=2&t<3)+Sa_5.*(t>=3&t<=5); *)
+    (* '<S1>:1:22' [Z_1,ZV_1,Za_1]=polynomial_v((t-3),2,980,0,0,1200,0,0); *)
+    i0_polynomial_v(t := t - 3.0, t1 := 2.0, S0 := 980.0, v0 := 0.0, a0 := 0.0, S1 := 1200, v1 := 0.0, a1 := 0.0);
+    Z_1 := i0_polynomial_v.b_S;
+    ZV_1 := i0_polynomial_v.v;
+    Za_1 := i0_polynomial_v.a;
+    (* Outport: '<Root>/dpt' *)
+    (* '<S1>:1:23' Z_2=980; *)
+    (* '<S1>:1:23' ZV_2=0; *)
+    (* '<S1>:1:23' Za_2=0; *)
+    (* '<S1>:1:24' Z=Z_2.*(t>=0&t<3)+Z_1.*(t>=3&t<=5); *)
+    (* '<S1>:1:25' VZ=ZV_2.*(t>=0&t<3)+ZV_1.*(t>=3&t<=5); *)
+    (* '<S1>:1:26' aZ=Za_2.*(t>=0&t<3)+Za_1.*(t>=3&t<=5); *)
+    (* '<S1>:1:28' dpt=[X,Y,Z]; *)
+    dpt[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * K_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * K_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * K_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * K_4);
+    dpt[1] := ((((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * S_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * S_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * S_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * S_4)) + (BOOL_TO_LREAL((t >= 3.0) AND (t <= 5.0)) * 225.0);
+    dpt[2] := (BOOL_TO_LREAL((t >= 0.0) AND (t < 3.0)) * 980.0) + (BOOL_TO_LREAL((t >= 3.0) AND (t <= 5.0)) * Z_1);
+    (* Outport: '<Root>/V' *)
+    (* '<S1>:1:28' V=[VX,VY,VZ]; *)
+    V[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * KV_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * KV_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * KV_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * KV_4);
+    V[1] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * SV_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * SV_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * SV_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * SV_4);
+    V[2] := BOOL_TO_LREAL((t >= 3.0) AND (t <= 5.0)) * ZV_1;
+    (* Outport: '<Root>/a' *)
+    (* '<S1>:1:28' a=[aX,aY,aZ].'; *)
+    a[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * Ka_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * Ka_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * Ka_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * Ka_4);
+    a[1] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 1.0)) * Sa_1) + (BOOL_TO_LREAL((t >= 1.0) AND (t < 1.5)) * Sa_2)) + (BOOL_TO_LREAL((t >= 1.5) AND (t < 2.0)) * Sa_3)) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * Sa_4);
+    a[2] := BOOL_TO_LREAL((t >= 3.0) AND (t <= 5.0)) * Za_1;
+ELSE 
+    (* '<S1>:1:31' else *)
+    (* '<S1>:1:34' [K_1,KV_1,Ka_1]=polynomial_v(t,2, 475, 0,0, 325,-90,20); *)
+    i0_polynomial_v(t := t, t1 := 2.0, S0 := 475.0, v0 := 0.0, a0 := 0.0, S1 := 325.0, v1 := -90.0, a1 := 20.0);
+    b_K_1 := i0_polynomial_v.b_S;
+    b_KV_1 := i0_polynomial_v.v;
+    b_Ka_1 := i0_polynomial_v.a;
+    (* 4-6 *)
+    (* '<S1>:1:35' [K_2,KV_2,Ka_2]=polynomial_v((t-2),1, 325,-90,20, 225,-120,-10); *)
+    i0_polynomial_v(t := t - 2.0, t1 := 1.0, S0 := 325.0, v0 := -90.0, a0 := 20.0, S1 := 225.0, v1 := -120.0, a1 := -10.0);
+    b_K_2 := i0_polynomial_v.b_S;
+    b_KV_2 := i0_polynomial_v.v;
+    b_Ka_2 := i0_polynomial_v.a;
+    (* 6-7 *)
+    (* '<S1>:1:36' [K_3,KV_3,Ka_3]=polynomial_v((t-3),1, 225,-120,-10, 125,-100,-20); *)
+    i0_polynomial_v(t := t - 3.0, t1 := 1.0, S0 := 225.0, v0 := -120.0, a0 := -10.0, S1 := 125.0, v1 := -100.0, a1 := -20.0);
+    b_K_3 := i0_polynomial_v.b_S;
+    b_KV_3 := i0_polynomial_v.v;
+    b_Ka_3 := i0_polynomial_v.a;
+    (* 7-8 *)
+    (* '<S1>:1:37' [K_4,KV_4,Ka_4]=polynomial_v((t-4),2, 125,-100,-20 , 0,0,0); *)
+    i0_polynomial_v(t := t - 4.0, t1 := 2.0, S0 := 125.0, v0 := -100.0, a0 := -20.0, S1 := 0.0, v1 := 0.0, a1 := 0.0);
+    b_K_4 := i0_polynomial_v.b_S;
+    b_KV_4 := i0_polynomial_v.v;
+    b_Ka_4 := i0_polynomial_v.a;
+    (* 8-10 *)
+    (* '<S1>:1:38' K_5=0; *)
+    (* '<S1>:1:38' KV_5=0; *)
+    (* '<S1>:1:38' Ka_5=0; *)
+    (* '<S1>:1:39' X=K_1.*(t>=0&t<2)+K_2.*(t>=2&t<3)+K_3.*(t>=3&t<4)+K_4.*(t>=4&t<6)+K_5.*(t>=6&t<10); *)
+    (* '<S1>:1:40' VX=KV_1.*(t>=0&t<2)+KV_2.*(t>=2&t<3)+KV_3.*(t>=3&t<4)+KV_4.*(t>=4&t<6)+KV_5.*(t>=6&t<10); *)
+    (* '<S1>:1:41' aX=Ka_1.*(t>=0&t<2)+Ka_2.*(t>=2&t<3)+Ka_3.*(t>=3&t<4)+Ka_4.*(t>=4&t<6)+Ka_5.*(t>=6&t<10); *)
+    (* '<S1>:1:45' [S_1,SV_1,Sa_1]=polynomial_v(t,2, 0,0,0, 20,15,15); *)
+    i0_polynomial_v(t := t, t1 := 2.0, S0 := 0.0, v0 := 0.0, a0 := 0.0, S1 := 20.0, v1 := 15.0, a1 := 15.0);
+    b_S_1 := i0_polynomial_v.b_S;
+    b_SV_1 := i0_polynomial_v.v;
+    b_Sa_1 := i0_polynomial_v.a;
+    (* 4-6s *)
+    (* '<S1>:1:46' [S_2,SV_2,Sa_2]=polynomial_v((t-2),1, 20,15,15, 45,30,-10); *)
+    i0_polynomial_v(t := t - 2.0, t1 := 1.0, S0 := 20.0, v0 := 15.0, a0 := 15.0, S1 := 45.0, v1 := 30.0, a1 := -10.0);
+    b_S_2 := i0_polynomial_v.b_S;
+    b_SV_2 := i0_polynomial_v.v;
+    b_Sa_2 := i0_polynomial_v.a;
+    (* 6-7s *)
+    (* '<S1>:1:47' [S_3,SV_3,Sa_3]=polynomial_v((t-3),1, 45,30,-10, 90,80,80); *)
+    i0_polynomial_v(t := t - 3.0, t1 := 1.0, S0 := 45.0, v0 := 30.0, a0 := -10.0, S1 := 90.0, v1 := 80.0, a1 := 80.0);
+    b_S_3 := i0_polynomial_v.b_S;
+    b_SV_3 := i0_polynomial_v.v;
+    b_Sa_3 := i0_polynomial_v.a;
+    (* 7-8s *)
+    (* '<S1>:1:48' [S_4,SV_4,Sa_4]=polynomial_v((t-4),2, 90,80,80, 225,0,0); *)
+    i0_polynomial_v(t := t - 4.0, t1 := 2.0, S0 := 90.0, v0 := 80.0, a0 := 80.0, S1 := 225.0, v1 := 0.0, a1 := 0.0);
+    b_S_4 := i0_polynomial_v.b_S;
+    b_SV_4 := i0_polynomial_v.v;
+    b_Sa_4 := i0_polynomial_v.a;
+    (* 8-10s *)
+    (* '<S1>:1:49' S_5=225; *)
+    (* '<S1>:1:49' SV_5=0; *)
+    (* '<S1>:1:49' Sa_5=0; *)
+    (* '<S1>:1:50' Y=S_1.*(t>=0&t<2)+S_2.*(t>=2&t<3)+S_3.*(t>=3&t<4)+S_4.*(t>=4&t<6)+S_5.*(t>=6&t<10); *)
+    (* '<S1>:1:51' VY=SV_1.*(t>=0&t<2)+SV_2.*(t>=2&t<3)+SV_3.*(t>=3&t<4)+SV_4.*(t>=4&t<6)+SV_5.*(t>=6&t<10); *)
+    (* '<S1>:1:52' aY=Sa_1.*(t>=0&t<2)+Sa_2.*(t>=2&t<3)+Sa_3.*(t>=3&t<4)+Sa_4.*(t>=4&t<6)+Sa_5.*(t>=6&t<10); *)
+    (* '<S1>:1:54' [Z_1,ZV_1,Za_1]=polynomial_v((t-6),4,980,0,0,1200,0,0); *)
+    i0_polynomial_v(t := t - 6.0, t1 := 4.0, S0 := 980.0, v0 := 0.0, a0 := 0.0, S1 := 1200, v1 := 0.0, a1 := 0.0);
+    b_Z_1 := i0_polynomial_v.b_S;
+    b_ZV_1 := i0_polynomial_v.v;
+    b_Za_1 := i0_polynomial_v.a;
+    (* Outport: '<Root>/dpt' *)
+    (* '<S1>:1:55' Z_2=980; *)
+    (* '<S1>:1:55' ZV_2=0; *)
+    (* '<S1>:1:55' Za_2=0; *)
+    (* '<S1>:1:56' Z=Z_2.*(t>=0&t<6)+Z_1.*(t>=6&t<=10); *)
+    (* '<S1>:1:57' VZ=ZV_2.*(t>=0&t<6)+ZV_1.*(t>=6&t<=10); *)
+    (* '<S1>:1:58' aZ=Za_2.*(t>=0&t<6)+Za_1.*(t>=6&t<=10); *)
+    (* '<S1>:1:60' dpt=[X,Y,Z]; *)
+    dpt[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_K_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_K_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_K_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_K_4);
+    dpt[1] := ((((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_S_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_S_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_S_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_S_4)) + (BOOL_TO_LREAL((t >= 6.0) AND (t <= 10.0)) * 225.0);
+    dpt[2] := (BOOL_TO_LREAL((t >= 0.0) AND (t < 6.0)) * 980.0) + (BOOL_TO_LREAL((t >= 6.0) AND (t <= 10.0)) * b_Z_1);
+    (* Outport: '<Root>/V' *)
+    (* '<S1>:1:60' V=[VX,VY,VZ]; *)
+    V[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_KV_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_KV_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_KV_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_KV_4);
+    V[1] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_SV_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_SV_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_SV_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_SV_4);
+    V[2] := BOOL_TO_LREAL((t >= 6.0) AND (t <= 10.0)) * b_ZV_1;
+    (* Outport: '<Root>/a' *)
+    (* '<S1>:1:60' a=[aX,aY,aZ].'; *)
+    a[0] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_Ka_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_Ka_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_Ka_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_Ka_4);
+    a[1] := (((BOOL_TO_LREAL((t >= 0.0) AND (t < 2.0)) * b_Sa_1) + (BOOL_TO_LREAL((t >= 2.0) AND (t < 3.0)) * b_Sa_2)) + (BOOL_TO_LREAL((t >= 3.0) AND (t < 4.0)) * b_Sa_3)) + (BOOL_TO_LREAL((t >= 4.0) AND (t < 6.0)) * b_Sa_4);
+    a[2] := BOOL_TO_LREAL((t >= 6.0) AND (t <= 10.0)) * b_Za_1;
+END_IF;
+
+(* End of MATLAB Function: '<Root>/MATLAB Function7' *)
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="TRACE_Access">
+      <LineId Id="3" Count="184" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

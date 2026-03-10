@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="TPDOS" Id="{e975156b-84ec-4351-8087-017139178d5b}">
+    <Declaration><![CDATA[TYPE TPDOS :
+STRUCT
+		position_actual_value :DINT;
+		velocity_actual_value :DINT;
+		Follow_error_actual_value :DINT;
+		torque_actual_value:INT;
+		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <POU Name="Second_order_filter" Id="{c85c023c-5053-4d65-ad7a-d786dcc4d73c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Second_order_filter
+
+VAR_INPUT
+	t1: LREAL;
+	f_c: ARRAY[1..3] OF LREAL;
+	T_in,T_in_1,T_in_2,T_OUT_LAST,T_OUT_LAST_2: ARRAY[1..3] OF LREAL;
+END_VAR
+VAR_OUTPUT
+	T_OUT: ARRAY[1..3] OF LREAL;
+END_VAR
+VAR
+w_c,b0,a0,a1,a2: ARRAY[1..3] OF LREAL; //滤波参数
+epsilon: LREAL:=0.707;
+i1:INT;
+N:INT:=3;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i1:=1 TO N BY 1 DO
+w_c[i1]:=2*pi*f_c[i1];
+b0[i1]:=w_c[i1]*w_c[i1]*t1*t1;
+a0[i1]:=b0[i1]+4*epsilon*w_c[i1]*t1 + 4;
+a1[i1]:= 2*b0[i1] - 8;
+a2[i1]:= b0[i1] - 4*epsilon*w_c[i1]*t1 + 4;
+
+T_OUT[i1]:=(b0[i1]*T_in[i1] + 2*b0[i1]*T_in_1[i1] 
++ b0[i1]*T_in_2[i1]
+- a1[i1]*T_OUT_LAST[i1] - a2[i1]*T_OUT_LAST_2[i1]) / a0[i1];
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Second_order_filter">
+      <LineId Id="43" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
